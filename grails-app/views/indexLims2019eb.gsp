@@ -30,22 +30,26 @@
     </div>
 </div>
 
-<div class='easyui-tabs' id='list1Div'>
-    <div title='2' data-options='closeable:false'>
-        <div id='list2Div'>
-            <data>这里是显示数据</data>
-        </div>
-        <div id='pagination2Div' class='easyui-pagination'>
-            <data>???</data>
-        </div>
+<div class="easyui-tabs" id="listLims2018EBDiv">
+    <div title="进度" data-options="closeable:false">
+        <div id="list进度Div"></div>
+        <div id="pagination进度Div" class="easyui-pagination"></div>
     </div>
-    <div title='3' data-options='closeable:false'>
-        <div id='list3Div'>
-            <data>这里是显示数据</data>
-        </div>
-        <div id='pagination3Div' class='easyui-pagination'>
-            <data>???</data>
-        </div>
+    <div title="登录" data-options="closeable:false">
+        <div id="list登录Div"></div>
+        <div id="pagination登录Div" class="easyui-pagination"></div>
+    </div>
+    <div title="近7天进度" data-options="closeable:false">
+        <div id="list近7天进度Div"></div>
+        <div id="pagination近7天进度Div" class="easyui-pagination"></div>
+    </div>
+    <div title="近7天登录" data-options="closeable:false">
+        <div id="list近7天登录Div"></div>
+        <div id="pagination近7天登录Div" class="easyui-pagination"></div>
+    </div>
+    <div title="完成度" data-options="closeable:false">
+        <div id="list完成度Div"></div>
+        <div id="pagination完成度Div" class="easyui-pagination"></div>
     </div>
 </div>
 
