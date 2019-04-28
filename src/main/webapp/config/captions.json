@@ -1,7 +1,7 @@
 [
   {
     "name": "main",
-    "title": "实验室数据管理系统2019DC",
+    "title": "实验室数据管理系统2019EB",
     "logo": "cuplogoA.png",
     "href": "www.cup.edu.cn",
     "description": "这里是中国石油大学（北京）的简介",
@@ -10,7 +10,7 @@
   {
     "name": "main详细介绍",
     "title": "实验室数据管理系统",
-    "logo": "cup_big.png",
+    "logo": "cuplogoA.png",
     "href": "www.cup.edu.cn",
     "description": "这里应该是中国石油大学的详细介绍"
   },
