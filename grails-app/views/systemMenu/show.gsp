@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="layout" content="main" />
+    <!-- 实现可定制的布局 -->
+        <g:if test="${layout}">
+            <meta name="layout" content="${layout}"/>
+        </g:if>
+        <g:else>
+            <g:if test="${session.layout}">
+                <meta name="layout" content="${session.layout}"/>
+            </g:if>
+            <g:else>
+                <meta name="layout" content="main"/>
+            </g:else>
+        </g:else>
+    <!-- end 实现可定制的布局 -->
         <g:set var="entityName" value="${message(code: 'systemMenu.label', default: 'SystemMenu')}" />
         <title><g:message code="default.show.label" args="[entityName]" /></title>
     </head>
@@ -20,9 +32,11 @@
             <div class="message" role="status">${flash.message}</div>
             </g:if>
             <f:display bean="systemMenu" />
-            <g:form resource="${this.systemMenu}" method="DELETE">
+            <g:form id="${this.systemMenu.id}" controller="${params.controller}" action="delete" method="DELETE">
                 <fieldset class="buttons">
-                    <g:link class="edit" action="edit" resource="${this.systemMenu}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+                    <g:link class="edit" action="edit" id="${this.systemMenu.id}" controller="${params.controller}">
+                        <g:message code="default.button.edit.label" default="Edit" />
+                    </g:link>
                     <input class="delete" type="submit" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
                 </fieldset>
             </g:form>

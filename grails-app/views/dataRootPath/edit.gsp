@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="layout" content="main" />
+    <!-- 实现可定制的布局 -->
+        <g:if test="${layout}">
+            <meta name="layout" content="${layout}"/>
+        </g:if>
+        <g:else>
+            <g:if test="${session.layout}">
+                <meta name="layout" content="${session.layout}"/>
+            </g:if>
+            <g:else>
+                <meta name="layout" content="main"/>
+            </g:else>
+        </g:else>
+    <!-- end 实现可定制的布局 -->
         <g:set var="entityName" value="${message(code: 'dataRootPath.label', default: 'DataRootPath')}" />
         <title><g:message code="default.edit.label" args="[entityName]" /></title>
     </head>
@@ -26,10 +38,12 @@
                 </g:eachError>
             </ul>
             </g:hasErrors>
-            <g:form resource="${this.dataRootPath}" method="PUT">
+            <g:form id="${this.dataRootPath.id}" action="update" controller="${params.controller}" method="PUT">
                 <g:hiddenField name="version" value="${this.dataRootPath?.version}" />
                 <fieldset class="form">
                     <f:all bean="dataRootPath"/>
+                    <g:hiddenField name="nextController" value="${params.nextController}"/>
+                    <g:hiddenField name="nextAction" value="${params.nextAction}"/>
                 </fieldset>
                 <fieldset class="buttons">
                     <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />

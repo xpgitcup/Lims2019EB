@@ -1,51 +1,120 @@
 package cn.edu.cup.lims
 
+import grails.converters.JSON
 import grails.validation.ValidationException
 import static org.springframework.http.HttpStatus.*
 
 class TeamController {
 
     TeamService teamService
+    def commonQueryService
+    def commonService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
+        def model = [:]
+        def userResult = false
         params.max = Math.min(max ?: 10, 100)
-        respond teamService.list(params), model:[teamCount: teamService.count()]
+        if (params.title) {
+            model.teamTitle = params.title
+            userResult = true
+        }
+        if (params.jsRoutine) {
+            model.teamJsRoutine = params.jsRoutine
+            userResult = true
+        }
+
+        if (userResult) {
+            model
+        } else {
+            respond teamService.list(params), model:[teamCount: teamService.count()]
+        }
     }
 
     def show(Long id) {
-        respond teamService.get(id)
+        def view = "show"
+        if (params.view) {
+            view = params.view
+        }
+
+        def team = teamService.get(id)
+
+        if (request.xhr) {
+            render(template: view, model: [team: team])
+        } else {
+            respond team
+        }
     }
 
     def create() {
-        respond new Team(params)
+        def view = "create"
+        if (params.view) {
+            view = params.view
+        }
+
+        def team = new Team(params)
+
+        if (request.xhr) {
+            render(template: view, model: [team: team])
+        } else {
+            respond team
+        }
     }
 
     def save(Team team) {
+
         if (team == null) {
             notFound()
             return
         }
 
-        try {
-            teamService.save(team)
-        } catch (ValidationException e) {
-            respond team.errors, view:'create'
-            return
+        def action = "index"
+        if (params.nextAction) {
+            action = params.nextAction
         }
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'team.label', default: 'Team'), team.id])
-                redirect team
-            }
-            '*' { respond team, [status: CREATED] }
+        def controller = params.controller
+        if (params.nextController) {
+            controller = params.nextController
         }
+
+        try {
+            teamService.save(team)
+            flash.message = message(code: 'default.created.message', args: [message(code: 'team.label', default: 'Team'), team.id])
+        } catch (ValidationException e) {
+            flash.message = team.errors
+        }
+
+        withFormat {
+            js { render "alert('team创建成功!')" }
+
+            json { render team as JSON }
+
+            '*' {
+                if (params.url) {
+                    redirect(params.url)
+                } else {
+                    redirect(controller: controller, action: action, params: params)
+                }
+            }
+        }
+
     }
 
     def edit(Long id) {
-        respond teamService.get(id)
+        def view = "edit"
+        if (params.view) {
+            view = params.view
+        }
+
+        def team = teamService.get(id)
+
+        if (request.xhr) {
+            render(template: view, model: [team: team])
+        } else {
+            respond team
+        }
     }
 
     def update(Team team) {
@@ -54,19 +123,28 @@ class TeamController {
             return
         }
 
-        try {
-            teamService.save(team)
-        } catch (ValidationException e) {
-            respond team.errors, view:'edit'
-            return
+        def action = "index"
+        if (params.nextAction) {
+            action = params.nextAction
         }
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'team.label', default: 'Team'), team.id])
-                redirect team
-            }
-            '*'{ respond team, [status: OK] }
+        def controller = ""
+        if (params.nextController) {
+            controller = params.nextController
+        }
+
+        try {
+            teamService.save(team)
+            flash.message = message(code: 'default.updated.message', args: [message(code: 'team.label', default: 'Team'), team.id])
+        } catch (ValidationException e) {
+            flash.message = team.errors
+        }
+
+        if (controller == "")
+        {
+            redirect(action: action)
+        } else {
+            redirect(controller: controller, action: action)
         }
     }
 
@@ -77,13 +155,112 @@ class TeamController {
         }
 
         teamService.delete(id)
+        flash.message = message(code: 'default.deleted.message', args: [message(code: 'team.label', default: 'Team'), id])
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'team.label', default: 'Team'), id])
-                redirect action:"index", method:"GET"
+        def action = "index"
+        if (params.nextAction) {
+            action = params.nextAction
+        }
+
+        def controller = ""
+        if (params.nextController) {
+            controller = params.nextController
+        }
+
+        if (controller == "")
+        {
+            redirect(action: action)
+        } else {
+            redirect(controller: controller, action: action)
+        }
+    }
+
+    def list() {
+        prepareParams()
+        def result = commonQueryService.listFunction(params)
+        result = processResult(result, params)
+        def view = result.view
+        flash.message = result.message
+        if (request.xhr) {
+            render(template: view, model: [objectList: result.objectList, flash: flash])
+        } else {
+            respond result.objectList
+        }
+    }
+
+    def count() {
+        prepareParams()
+        def count = commonQueryService.countFunction(params)
+        def result = [count: count]
+
+        if (request.xhr) {
+            render result as JSON
+        } else {
+            result
+        }
+    }
+
+    protected void prepareParams() {}
+
+    protected def processResult(result, params) {
+        return result
+    }
+
+    def importFromJsonFile() {
+
+        def fileName = "${commonService.webRootPath}/${params.fileName}"
+        def objectList = commonService.importObjectArrayFromJsonFileName(fileName, Team.class)
+        if (objectList.size()>0) {
+            // 先清空
+            Team.list().each { e ->
+                teamService.delete(e.id)
             }
-            '*'{ render status: NO_CONTENT }
+            objectList.each { e ->
+                teamService.save(e)
+            }
+        }
+
+        def action = "index"
+        if (params.nextAction) {
+           action = params.nextAction
+         }
+
+        def controller = ""
+        if (params.nextController) {
+            controller = params.nextController
+        }
+
+        if (controller == "") {
+            redirect(action: action)
+        } else {
+            redirect(controller: controller, action: action)
+        }
+    }
+
+    def exportToJsonFile() {
+
+        def fileName = "${commonService.webRootPath}/${params.fileName}"
+
+       def fjson = commonService.exportObjects2JsonString(Team.list())
+        def printer = new File(fileName).newPrintWriter('utf-8')    //写入文件
+        printer.println(fjson)
+        printer.close()
+
+        def action = "index"
+        if (params.nextAction) {
+            action = params.nextAction
+        }
+
+        def controller = ""
+        if (params.nextController) {
+            controller = params.nextController
+        }
+
+        if (controller == "")
+        {
+            redirect(action: action)
+        } else {
+            redirect(controller: controller, action: action)
         }
     }
 

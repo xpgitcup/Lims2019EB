@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="layout" content="main" />
+    <!-- 实现可定制的布局 -->
+        <g:if test="${layout}">
+            <meta name="layout" content="${layout}"/>
+        </g:if>
+        <g:else>
+            <g:if test="${session.layout}">
+                <meta name="layout" content="${session.layout}"/>
+            </g:if>
+            <g:else>
+                <meta name="layout" content="main"/>
+            </g:else>
+        </g:else>
+    <!-- end 实现可定制的布局 -->
         <g:set var="entityName" value="${message(code: 'progress.label', default: 'Progress')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
@@ -20,7 +32,7 @@
             </g:if>
             <f:table collection="${progressList}" />
 
-            <div class="pagination">
+            <div class="paginationGrails">
                 <g:paginate total="${progressCount ?: 0}" />
             </div>
         </div>
