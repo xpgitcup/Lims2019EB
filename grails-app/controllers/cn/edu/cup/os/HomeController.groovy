@@ -12,12 +12,37 @@ class HomeController {
     def systemMenuService
     def initService
     def systemUserService
+    def commonQueryService
 
-    /*
-    查询
-    * */
-    def query() {
-        println("home查询: ${params}")
+    def prepareParams() { }
+
+    def processResult(result, params) {
+        return result
+    }
+
+    def list() {
+        prepareParams()
+        def result = commonQueryService.listFunction(params)
+        result = processResult(result, params)
+        def view = result.view
+        flash.message = result.message
+        if (request.xhr) {
+            render(template: view, model: [objectList: result.objectList, flash: flash])
+        } else {
+            respond result.objectList
+        }
+    }
+
+    def count() {
+        prepareParams()
+        def count = commonQueryService.countFunction(params)
+        def result = [count: count]
+
+        if (request.xhr) {
+            render result as JSON
+        } else {
+            result
+        }
     }
 
     /*

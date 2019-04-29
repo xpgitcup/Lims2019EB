@@ -13,11 +13,11 @@ class OperationSystemInterceptor {
                 .excludes(uri: "/${rootURI}/")  //这一句是关键。发布后显示主页的关键
                 .excludes(uri: "/")            //开发期间显示主页
                 .excludes(controller: "favicon")
-        println("拦截器：${m}")
+        //println("拦截器：${m}")
     }
 
     boolean before() {
-        println("${controllerName}，动作：${actionName}.之前...")
+        //println("${controllerName}，动作：${actionName}.之前...")
         if (!session.systemUser) {
             //println("跳转...")
             redirect(controller: "home", action: "loginUI")

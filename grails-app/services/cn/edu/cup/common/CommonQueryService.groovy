@@ -9,10 +9,27 @@ class CommonQueryService {
     def queryStatementAService
     def dataSource
 
+    def listFunction(params) {
+        def (controllerName, actionName, GString paramsString, formatString) = genericKey(params)
+        println("查询参数：${paramsString}")
+        def queryStatement =
+                QueryStatementA.findByControllerNameAndActionNameAndParamsStringAndFormatString(controllerName, actionName, paramsString, formatString)
+        if (!queryStatement) {
+            queryStatement = new QueryStatementA(
+                    controllerName: controllerName,
+                    actionName: actionName,
+                    formatString: formatString,
+                    paramsString: paramsString
+            )
+            queryStatementAService.save(queryStatement)
+        }
+    }
+
     def countFunction(params) {
         def (controllerName, actionName, GString paramsString, formatString) = genericKey(params)
-
-        def queryStatement = QueryStatementA.findByControllerNameAndActionNameAndParamsStringAndFormatString(controllerName, actionName, paramsString, formatString)
+        println("统计参数：${paramsString}")
+        def queryStatement =
+                QueryStatementA.findByControllerNameAndActionNameAndParamsStringAndFormatString(controllerName, actionName, paramsString, formatString)
         if (!queryStatement) {
             queryStatement = new QueryStatementA(
                     controllerName: controllerName,
