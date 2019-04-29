@@ -45,11 +45,11 @@
     <asset:javascript src="easyui/jquery.easyui.min.js"/>
 
     <asset:javascript src="bootstrap.js"/>
-    <!--asset:javascript src="jquery/jquery.cookie.js"/-->
+    <asset:javascript src="jquery/jquery.cookie.js"/>
 
     <!-- 加载石油大学的设置-->
     <asset:javascript src="cn/edu/cup/common.js"/>
-    <asset:javascript src="cn/edu/cup/commonUI20190206.js"/>
+    <asset:javascript src="cn/edu/cup/commonUI20190429.js"/>
     <asset:javascript src="cn/edu/cup/os/home.js"/>
 
     <g:layoutHead/>

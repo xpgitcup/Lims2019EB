@@ -30,7 +30,7 @@
     </div>
 </div>
 
-<div class="easyui-tabs" id="listLims2018EBDiv">
+<div class="easyui-tabs" id="listLims2019EBDiv">
     <div title="进度" data-options="closeable:false">
         <div id="list进度Div"></div>
         <div id="pagination进度Div" class="easyui-pagination"></div>

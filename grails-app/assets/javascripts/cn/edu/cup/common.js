@@ -3,6 +3,28 @@
  */
 
 /*
+* storage的读取
+* */
+function readLocalStorage(cName, defaultValue) {
+    var result = localStorage.getItem(cName)
+    if (!result) {
+        result = defaultValue
+    }
+    return result
+}
+
+/*
+* storage的读取
+* */
+function readStorage(cName, defaultValue) {
+    var result = sessionStorage.getItem(cName)
+    if (!result) {
+        result = defaultValue
+    }
+    return result
+}
+
+/*
 * 对象数组查找
 * */
 function arrayFind(arrayToSearch, attr, value) {
