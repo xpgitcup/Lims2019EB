@@ -7,6 +7,7 @@ import static org.springframework.http.HttpStatus.*
 class QueryStatementController {
 
     QueryStatementService queryStatementService
+    def commonQueryAService
     def commonQueryService
     def commonService
 

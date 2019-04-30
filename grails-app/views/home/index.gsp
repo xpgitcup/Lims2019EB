@@ -18,28 +18,21 @@
     <asset:image src="cup/${cn.edu.cup.basic.Caption.findByName("main详细介绍")?.logo}"/>
 </div>
 
-<div class="container-fluid">
-    <table>
-        <tr>
-            <td><h1>完成度${pfc}%</h1></td>
-            <td><h3>${flash.message}</h3></td>
-        </tr>
-    </table>
-
-    <table>
-        <thead>
-        <th>控制器</th>
-        <th>状态</th>
-        </thead>
-        <tbody>
-        <g:each in="${controllers}" var="item" status="i">
-            <tr>
-                <td>${item.key}</td>
-                <td>${item.value}</td>
-            </tr>
-        </g:each>
-        </tbody>
-    </table>
+<div class="container-cup">
+    <div class="easyui-tabs" id="listHomeDiv">
+        <div title="我领导的" data-options="closeable:false">
+            <div id="list我领导的Div"></div>
+            <div id="pagination我领导的Div" class="easyui-pagination"></div>
+        </div>
+        <div title="我参与的" data-options="closeable:false">
+            <div id="list我参与的Div"></div>
+            <div id="pagination我参与的Div" class="easyui-pagination"></div>
+        </div>
+        <div title="我管理的" data-options="closeable:false">
+            <div id="list我管理的Div"></div>
+            <div id="pagination我管理的Div" class="easyui-pagination"></div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

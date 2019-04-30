@@ -4,6 +4,7 @@ class QueryStatementA {
 
     String controllerName
     String actionName
+    String keyString
     String formatString
     String paramsString
     String queryString
@@ -13,6 +14,7 @@ class QueryStatementA {
     static constraints = {
         controllerName(nullable: false)
         actionName(nullable: false)
+        keyString(nullable: false)
         formatString(nullable: true)
         paramsString(nullable: true)
         queryString(nullable: true)

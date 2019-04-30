@@ -3,7 +3,7 @@ package cn.edu.cup.common
 import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 
-class CommonQueryServiceSpec extends Specification implements ServiceUnitTest<CommonQueryService>{
+class CommonQueryAServiceSpec extends Specification implements ServiceUnitTest<CommonQueryAService>{
 
     def setup() {
     }

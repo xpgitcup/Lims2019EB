@@ -7,7 +7,7 @@ import static org.springframework.http.HttpStatus.*
 class CourseController {
 
     CourseService courseService
-    def commonQueryService
+    def commonQueryAService
     def commonService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
@@ -177,7 +177,7 @@ class CourseController {
 
     def list() {
         prepareParams()
-        def result = commonQueryService.listFunction(params)
+        def result = commonQueryAService.listFunction(params)
         result = processResult(result, params)
         def view = result.view
         flash.message = result.message
@@ -190,7 +190,7 @@ class CourseController {
 
     def count() {
         prepareParams()
-        def count = commonQueryService.countFunction(params)
+        def count = commonQueryAService.countFunction(params)
         def result = [count: count]
 
         if (request.xhr) {

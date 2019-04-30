@@ -24,7 +24,7 @@
 <!-- end 实现可定制的布局 -->
     <g:set var="entityName" value="QueryStatementA"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${entityName}维护</title>
+    <title>${entityName}</title>
     <asset:javascript src="cn/edu/cup/system/${entityName}.js"/>
 </head>
 
@@ -63,7 +63,7 @@
 </div>
 
 <div class="easyui-panel">
-    <div title="QueryStatement" id="listQueryStatementDiv" class="easyui-panel"></div>
+    <div title="QueryStatement" id="list${entityName}Div" class="easyui-panel"></div>
     <div id="paginationQueryStatementDiv" class="easyui-pagination"></div>
 </div>
 

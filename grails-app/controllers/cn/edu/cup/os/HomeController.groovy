@@ -12,7 +12,7 @@ class HomeController {
     def systemMenuService
     def initService
     def systemUserService
-    def commonQueryService
+    def commonQueryAService
 
     def prepareParams() { }
 
@@ -22,7 +22,7 @@ class HomeController {
 
     def list() {
         prepareParams()
-        def result = commonQueryService.listFunction(params)
+        def result = commonQueryAService.listFunction(params)
         result = processResult(result, params)
         def view = result.view
         flash.message = result.message
@@ -35,7 +35,7 @@ class HomeController {
 
     def count() {
         prepareParams()
-        def count = commonQueryService.countFunction(params)
+        def count = commonQueryAService.countFunction(params)
         def result = [count: count]
 
         if (request.xhr) {
@@ -207,8 +207,8 @@ class HomeController {
             session.userTitle = systemUser.personTitle()
             session.userName = systemUser.personName()
             systemCommonService.updateSystemStatus(request, params)
-            //redirect(uri: "/home")
-            redirect(uri: "/")
+            redirect(uri: "/home")
+            //redirect(uri: "/")
         } else {
             flash.message = "用户名或密码错误！"
             println("用户名或密码错误！")

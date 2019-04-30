@@ -36,11 +36,11 @@ $(function () {
         var total = countLims2019EB(title)
         paginationDiv.pagination({
             pageSize: localPageSize,
-            total: countLims2019EB(title),
+            total: total,
             pageList: [1, 3, 5, 10, 20, 30],
             showPageList: false,
             pageNumber: currentPage,
-            displayMsg: false,
+            //displayMsg: false,
             onSelectPage: function (pageNumber, pageSize) {
                 console.info("setupPaginationParams4TabPage: " + title)
                 $.cookie("currentPage" + title, pageNumber);     //记录当前页面

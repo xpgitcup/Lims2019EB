@@ -25,6 +25,7 @@
     <g:set var="entityName" value="QueryStatement"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${entityName}维护</title>
+    <asset:javascript src="cn/edu/cup/commonUI20190206.js"/>
     <asset:javascript src="cn/edu/cup/system/${entityName}.js"/>
 </head>
 
