@@ -40,6 +40,12 @@
         "menuAction": "operation4DataRootPath/index",
         "menuDescription": "对系统底层的数据路径进行维护",
         "menuOrder": 40
+      },
+      {
+        "menuContext": "底层维护",
+        "menuAction": "basic/index",
+        "menuDescription": "底层的数据维护",
+        "menuOrder": 40
       }
     ]
   },
