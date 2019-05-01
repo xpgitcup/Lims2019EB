@@ -23,7 +23,7 @@ class QueryStatementA {
         keyString(nullable: false)
         formatString(nullable: true)
         paramsString(nullable: true)
-        queryString(nullable: true)
+        queryString(nullable: true, size: 0..1024)
         viewName(nullable: true)
         isSQL()
     }

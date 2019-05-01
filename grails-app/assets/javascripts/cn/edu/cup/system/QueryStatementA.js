@@ -1,30 +1,34 @@
-var listQueryStatementDiv;
-var paginationQueryStatementDiv;
-var localQueryStatementPageSize = 10
-var titleQueryStatement;// = "查询维护"
+//全局变量定义
+var listQueryStatementADiv;
+var localPageSizeQueryStatementA;
 
 $(function () {
+
     console.info("加载..." + document.title);
-    titleQueryStatement = document.title;   // 当前页面的标题：一般来说，就是域类的名称。对于单个面板的情况。
 
-    var currentPage = readLocalStorage("currentPage" + document.title, 1);
+    //变量获取
+    listQueryStatementADiv = $("#listQueryStatementADiv");
+    var localPageSizeQueryStatementA = readLocalStorage("pageSize" + document.title, 10);
 
-    listQueryStatementDiv = $("#listQueryStatementDiv");
-    listQueryStatementDiv.panel({
-        href: loadQueryStatement(titleQueryStatement, currentPage, localQueryStatementPageSize)
-    })
+    listQueryStatementADiv.panel({
+        href:loadQueryStatementA(document.title, cPageNumber, localPageSizeQueryStatementA)
+    });
 
-    paginationQueryStatementDiv = $("#paginationQueryStatementDiv");
-    paginationQueryStatementDiv.pagination({
-        pageSize: localQueryStatementPageSize,
-        total: countQueryStatement(titleQueryStatement),
+    /*
+    * 设置分页参数
+    * */
+    var paginationQueryStatementADiv = $("#paginationQueryStatementADiv")
+    var cPageNumber = readStorage("currentPage" + document.title, 1);
+    var total = countQueryStatementA(document.title)
+    paginationQueryStatementADiv.pagination({
+        pageSize: localPageSizeQueryStatementA,
+        total: total,
         pageList: [1, 3, 5, 10, 20, 30],
         showPageList: false,
-        pageNumber: currentPage,
+        pageNumber: cPageNumber,
         onSelectPage: function (pageNumber, pageSize) {
-            console.info("setupPaginationParams4TabPage: " + titleQueryStatement)
-            sessionStorage.setItem("currentPage" + document.title, pageNumber);
-            loadQueryStatement(titleQueryStatement, pageNumber, pageSize);
+            sessionStorage.setItem("currentPage" + document.title, pageNumber);     //记录当前页面
+            loadQueryStatementA(document.title, pageNumber, pageSize);
         }
     })
 
@@ -33,44 +37,30 @@ $(function () {
 /*
 * 统计函数
 * */
-function countQueryStatement(title) {
-    //console.info(document.title + "+统计......");
-    var url = "operation4QueryStatementA/count?key=" + title + appendParam();
-    //console.info(document.title + " : " + url);
+function countQueryStatementA(title) {
+    console.info(document.title + "+统计......");
+    var append = setupAppendParamsQueryStatementA();
+    var url = "operation4QueryStatementA/count?key=" + title + append
+    console.info(document.title + " : " + url);
     var total = ajaxCalculate(url);
-    //console.info(document.title + "+统计......" + total);
     return total
 }
 
 /*
 * 数据加载函数
 * */
-function loadQueryStatement(title, page, pageSize) {
-    //console.info(document.title + "+数据加载......" + " 第" + page + "页/" + pageSize);
+function loadQueryStatementA(title, page, pageSize) {
+    console.info(document.title + "+数据加载......" + title + " 第" + page + "页/" + pageSize);
+    var append = setupAppendParamsQueryStatementA();
     var params = getParams(page, pageSize);    //getParams必须是放在最最前面！！
-    var url = "operation4QueryStatementA/list" + params + "&key=" + title + appendParam();
-    //console.info(document.title + " : " + url);
+    var url = "operation4QueryStatementA/list" + params + "&key=" + title + append;
+    console.info(document.title + " : " + url);
     ajaxRun(url, 0, "list" + title + "Div");
 }
 
-/*
-* 附加参数
-* */
-function appendParam() {
-    var filter = readStorage("filter" + document.title, false)
-    var keyString = readCookie("keyString", "")
-    console.info("过滤状态：" + filter + " " + keyString);
-    var param = ""
-    if (filter) {
-        if (keyString) {
-            param = "&keyString=" + keyString;
-            $("#currentFilter").html(keyString)
-        } else {
-            param = "&filter=true"
-        }
-    }
-    console.info("附加参数：" + param);
-    return param
+function setupAppendParamsQueryStatementA() {
+    // 根据sessionStorage的参数，设置相应的附加参数，不同的标签的--都在各自页面考虑，所以不带参数
+    return "";
 }
 
 /*
@@ -87,5 +77,12 @@ function listToDo() {
 * */
 function clearFilter() {
     sessionStorage.setItem("filter" + document.title, false)
+    location.reload();
+}
+
+function deleteItem(id) {
+    console.info("删除：" + id);
+    ajaxExecuteWithMethod("operation4QueryStatementA/delete?id=" + id, 'DELETE');
+    console.info("删除：" + id + "了！");
     location.reload();
 }

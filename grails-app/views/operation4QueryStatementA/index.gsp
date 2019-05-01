@@ -63,8 +63,8 @@
 </div>
 
 <div class="easyui-panel">
-    <div title="QueryStatement" id="list${entityName}Div" class="easyui-panel"></div>
-    <div id="paginationQueryStatementDiv" class="easyui-pagination"></div>
+    <div title="QueryStatementA" id="listQueryStatementADiv" class="easyui-panel"></div>
+    <div id="paginationQueryStatementADiv" class="easyui-pagination"></div>
 </div>
 
 <g:if test="${flash.message}">
