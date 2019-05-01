@@ -45,6 +45,7 @@
                 </div>
 
                 <div id="operation4SystemAttributeDiv" class="easyui-panel">
+                    <ul id="treeViewSystemAttributeUl" class="easyui-tree"></ul>
                 </div>
             </div>
         </div>

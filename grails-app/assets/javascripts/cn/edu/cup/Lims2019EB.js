@@ -1,15 +1,16 @@
+//全局变量定义
 var listLims2019EBDiv;
-var lims2019EBTabNames = ["进度", "登录", "近7天进度", "近7天登录", "完成度"];
+var Lims2019EBTabNames = ["进度", "登录", "近7天进度", "近7天登录", "完成度"];
+var localPageSizeLims2019EB;
 
 $(function () {
 
     console.info("加载..." + document.title);
 
+    //变量获取
     listLims2019EBDiv = $("#listLims2019EBDiv");
-    //console.info(listLims2019EBDiv);
-    // 当前页面的缺省标签页
     var currentTab = readStorage("current" + document.title, "");
-    var localPageSize = readLocalStorage("pageSize" + document.title, 10);
+    var localPageSizeLims2019EB = readLocalStorage("pageSize" + document.title, 10);
 
     listLims2019EBDiv.tabs({
         onSelect: function (title, index) {
@@ -17,9 +18,9 @@ $(function () {
             console.info("选择标签：" + document.title + "--" + index);
             sessionStorage.setItem("current" + document.title, title);
             //------------------------------------------------------------------------------------------------------
-            //var cPageNumber = readCookie("currentPage" + title, 1)
+            //记录当前页
             var cPageNumber = readStorage("currentPage" + document.title + title, 1);
-            loadLims2019EB(title, cPageNumber, localPageSize)
+            loadLims2019EB(title, cPageNumber, localPageSizeLims2019EB)
             // 设置翻页
             configPagination(title);
         }
@@ -31,19 +32,17 @@ $(function () {
     * 设置分页参数
     * */
     function configPagination(title) {
-        var paginationDiv = $("#pagination" + title + "Div")
-        var currentPage = readCookie("currentPage" + title, 1);
+        var paginationDiv = $("#paginationLims2019EB" + title + "Div")
+        var cPageNumber = readStorage("currentPage" + document.title + title, 1);
         var total = countLims2019EB(title)
         paginationDiv.pagination({
-            pageSize: localPageSize,
+            pageSize: localPageSizeLims2019EB,
             total: total,
             pageList: [1, 3, 5, 10, 20, 30],
             showPageList: false,
-            pageNumber: currentPage,
-            //displayMsg: false,//这样设置就会出现诡异的错误！
+            pageNumber: cPageNumber,
             onSelectPage: function (pageNumber, pageSize) {
-                console.info("setupPaginationParams4TabPage: " + title)
-                $.cookie("currentPage" + title, pageNumber);     //记录当前页面
+                sessionStorage.setItem("currentPage" + doument.title + title, pageNumber);     //记录当前页面
                 loadLims2019EB(title, pageNumber, pageSize);
             }
         })
@@ -57,7 +56,7 @@ $(function () {
 * */
 function countLims2019EB(title) {
     console.info(document.title + "+统计......");
-    var append = shiftDisplay(title);
+    var append = setupAppendParamsLims2019EB();
     var url = "home/count?key=" + title + append
     console.info(document.title + " : " + url);
     var total = ajaxCalculate(url);
@@ -69,13 +68,14 @@ function countLims2019EB(title) {
 * */
 function loadLims2019EB(title, page, pageSize) {
     console.info(document.title + "+数据加载......" + title + " 第" + page + "页/" + pageSize);
-    var append = shiftDisplay(title);
+    var append = setupAppendParamsLims2019EB();
     var params = getParams(page, pageSize);    //getParams必须是放在最最前面！！
     var url = "home/list" + params + "&key=" + title + append;
     console.info(document.title + " : " + url);
     ajaxRun(url, 0, "list" + title + "Div");
 }
 
-function shiftDisplay(title) {
+function setupAppendParamsLims2019EB() {
+    // 根据sessionStorage的参数，设置相应的附加参数，不同的标签的--都在各自页面考虑，所以不带参数
     return "";
 }

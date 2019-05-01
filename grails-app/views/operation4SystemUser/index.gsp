@@ -24,7 +24,7 @@
 <!-- end 实现可定制的布局 -->
     <g:set var="entityName" value="SystemUser"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${entityName}维护</title>
+    <title>${entityName}</title>
     <asset:javascript src="cn/edu/cup/system/${entityName}.js"/>
 </head>
 
@@ -45,7 +45,10 @@
                     </div>
                 </div>
 
-                <div id="operation4SystemUserDiv" class="easyui-panel">
+                <div class="easyui-panel">
+                    <div title="SystemUser" id="listSystemUserDiv" class="easyui-panel"></div>
+
+                    <div id="paginationSystemUserDiv" class="easyui-pagination"></div>
                 </div>
             </div>
         </div>
@@ -56,7 +59,9 @@
                     <div class="easyui-panel" style="width: 100%">
                         <ul>
                             <li><a class="create" href="javascript: createSystemUser(0)">新建</a></li>
-                            <li><a class="save" href="operation4SystemUser/exportToJsonFile?fileName=config/out/systemUser.json">导出Json文件</a></li>
+                            <li><a class="save"
+                                   href="operation4SystemUser/exportToJsonFile?fileName=config/out/systemUser.json">导出Json文件</a>
+                            </li>
                         </ul>
                     </div>
                 </div>

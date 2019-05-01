@@ -24,7 +24,7 @@
 <!-- end 实现可定制的布局 -->
     <g:set var="entityName" value="SystemMenu"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${entityName}维护</title>
+    <title>${entityName}</title>
     <asset:javascript src="cn/edu/cup/system/${entityName}.js"/>
 </head>
 
@@ -46,6 +46,7 @@
                 </div>
 
                 <div id="operation4SystemMenuDiv" class="easyui-panel">
+                    <ul id="treeViewSystemMenuUl" class="easyui-tree"></ul>
                 </div>
             </div>
         </div>
@@ -57,7 +58,8 @@
                         <ul>
                             <li><a class="create" href="javascript: createSystemMenu(0)">新建根节点</a></li>
                             <li><a id="createSystemMenu" class="create" href="#">新建子节点</a></li>
-                            <li><a id="exportSystemMenu" href="operation4SystemMenu/exportToJsonFile?fileName=config/out/systemMenu.json"
+                            <li><a id="exportSystemMenu"
+                                   href="operation4SystemMenu/exportToJsonFile?fileName=config/out/systemMenu.json"
                                    class="save">导出Json文件</a></li>
                         </ul>
                     </div>

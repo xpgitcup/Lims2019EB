@@ -11,6 +11,12 @@ class QueryStatementA {
     String viewName
     boolean isSQL = false
 
+    static mapping = {
+        sort('controllerName')
+        sort('actionName')
+        sort('keyString')
+    }
+
     static constraints = {
         controllerName(nullable: false)
         actionName(nullable: false)

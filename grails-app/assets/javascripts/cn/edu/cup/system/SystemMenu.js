@@ -1,30 +1,45 @@
-var operation4SystemMenuDiv;
-var jsTitle = "系统菜单";
-var title4SystemMenu = [jsTitle]
-var isTreeView4SystemMenu = [true]
-var treeData4SystemMenu = ["operation4SystemMenu/getTreeViewData"]
+//全局变量定义
+var treeViewSystemMenuUl;
 
 $(function () {
-    console.info(jsTitle + "......");
 
-    operation4SystemMenuDiv = $("#operation4SystemMenuDiv");
-    var settings = {
-        divId: operation4SystemMenuDiv,
-        titles: title4SystemMenu,
-        //树形结构
-        isTreeView: isTreeView4SystemMenu,
-        treeData: treeData4SystemMenu,
-        treeNodeDoSomeThing: showSystemMenu, //当节点被选择
-        //分页设置
-        paginationMessage: "",
-        pageList: [],
-        showPageList: false,
-        loadFunction: loadSystemMenu,
-        countFunction: countSystemMenu
-    }
+    console.info("加载..." + document.title);
 
-    configDisplayUI(settings);
+    //变量获取
+    treeViewSystemMenuUl = $("#treeViewSystemMenuUl");
+
+    treeViewSystemMenuUl.tree({
+        url: "operation4SystemMenu/getTreeViewData",
+        onSelect: function (node) {
+            console.info("树形结构节点选择：" + node.target.id);
+            sessionStorage.setItem("currentNode" + document.title, node.target.id);
+            treeNodeSelectedSystemMenu(node);
+        },
+        onLoadSuccess: function () {
+            var cnodeid = readStorage("currentNode" + document.title, 0);
+            console.info("上一次：" + cnodeid);
+            treeViewSystemMenuUl.tree("collapseAll");
+            if (cnodeid != 0) {
+                console.info("扩展到：" + cnodeid);
+                var cnode = $("#" + cnodeid);
+                treeViewSystemMenuUl.tree("expandTo", cnode);
+                treeViewSystemMenuUl.tree("select", cnode);
+            }
+        }
+    })
 });
+
+/*
+* 节点选择
+* */
+function treeNodeSelectedSystemMenu(node) {
+    console.info("选择" + node);
+    if (node) {
+        $("#createSystemMenu").attr('href', 'javascript: createSystemMenu(' + node.attributes[0] + ')');
+        var id = node.attributes[0];
+        ajaxRun("operation4SystemMenu/getSystemMenu", id, "showSystemMenuDiv");
+    }
+}
 
 /*
  * 新建
@@ -40,34 +55,4 @@ function createSystemMenu(id) {
 function editSystemMenu(id) {
     console.info("编辑SystemMenu." + id);
     ajaxRun("operation4SystemMenu/edit", id, "showSystemMenuDiv");
-}
-
-/*
- * 显示当前属性
- * */
-function showSystemMenu(node) {
-    console.info("显示当前系统属性" + node);
-    if (node) {
-        $("#createSystemMenu").attr('href', 'javascript: createSystemMenu(' + node.attributes[0] + ')');
-        var id = node.attributes[0];
-        ajaxRun("operation4SystemMenu/getSystemMenu", id, "showSystemMenuDiv");
-    }
-}
-
-/*
-* 统计函数
-* */
-function countSystemMenu(title) {
-    console.info(jsTitle + "+统计......");
-    var total = ajaxCalculate("operation4SystemMenu/count?key=" + title);
-    return total
-}
-
-/*
-* 数据加载函数
-* */
-function loadSystemMenu(title, page, pageSize) {
-    console.info(jsTitle + "+数据加载......" + title + " 第" + page + "页/" + pageSize);
-    var params = getParams(page, pageSize);    //getParams必须是放在最最前面！！
-    ajaxRun("operation4SystemMenu/list" + params + "&key=" + title, 0, "list" + title + "Div");
 }

@@ -108,9 +108,7 @@
 
 </div>
 
-<div class="easyui-panel">
-    <g:layoutBody/>
-</div>
+<g:layoutBody/>
 
 <div class="nav">
     <div class="col-md-4 column">
