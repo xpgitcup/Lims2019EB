@@ -40,7 +40,7 @@ $(function () {
             pageList: [1, 3, 5, 10, 20, 30],
             showPageList: false,
             pageNumber: currentPage,
-            //displayMsg: false,
+            //displayMsg: false,//这样设置就会出现诡异的错误！
             onSelectPage: function (pageNumber, pageSize) {
                 console.info("setupPaginationParams4TabPage: " + title)
                 $.cookie("currentPage" + title, pageNumber);     //记录当前页面
