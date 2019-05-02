@@ -11,7 +11,7 @@
  Target Server Version : 80015
  File Encoding         : 65001
 
- Date: 01/05/2019 23:31:07
+ Date: 02/05/2019 22:37:46
 */
 
 SET NAMES utf8mb4;
@@ -33,7 +33,7 @@ CREATE TABLE `query_statementa`  (
   `key_string` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `view_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of query_statementa
@@ -54,7 +54,9 @@ INSERT INTO `query_statementa` VALUES (17, 0, NULL, 'home', b'0', 'list', '[max,
 INSERT INTO `query_statementa` VALUES (18, 0, NULL, 'home', b'0', 'count', '[]', NULL, '近7天登录', NULL);
 INSERT INTO `query_statementa` VALUES (19, 0, NULL, 'home', b'0', 'list', '[max, offset]', NULL, '完成度', NULL);
 INSERT INTO `query_statementa` VALUES (20, 0, NULL, 'home', b'0', 'count', '[]', NULL, '完成度', NULL);
-INSERT INTO `query_statementa` VALUES (21, 0, NULL, 'operation4QueryStatementA', b'0', 'list', '[filter, max, offset]', NULL, 'QueryStatementA', NULL);
-INSERT INTO `query_statementa` VALUES (22, 0, NULL, 'operation4QueryStatementA', b'0', 'count', '[filter]', NULL, 'QueryStatementA', NULL);
+INSERT INTO `query_statementa` VALUES (23, 5, NULL, 'operation4QueryStatementA', b'0', 'list', '[max, offset]', 'from QueryStatementA queryStatementA \r\nwhere queryStatementA.queryString=null\r\norder by controllerName, actionName', 'QueryStatementA待编辑', 'listQueryStatementA');
+INSERT INTO `query_statementa` VALUES (24, 2, NULL, 'operation4QueryStatementA', b'0', 'count', '[]', 'select count(*) from QueryStatementA queryStatementA\r\nwhere queryStatementA.queryString=null', 'QueryStatementA待编辑', NULL);
+INSERT INTO `query_statementa` VALUES (25, 1, NULL, 'operation4QueryStatementA', b'0', 'count', '[like]', 'select count(*) from QueryStatementA queryStatementA\r\nwhere queryStatementA.keyString like :like', 'QueryStatementA', NULL);
+INSERT INTO `query_statementa` VALUES (26, 1, NULL, 'operation4QueryStatementA', b'0', 'list', '[like, max, offset]', 'from QueryStatementA queryStatementA \r\nwhere queryStatementA.keyString like :like\r\norder by controllerName, actionName', 'QueryStatementA', 'listQueryStatementA');
 
 SET FOREIGN_KEY_CHECKS = 1;

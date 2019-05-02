@@ -29,6 +29,6 @@ class QueryStatementA {
     }
 
     String toString() {
-        return "${controllerName}.${actionName}.${paramsString}"
+        return "${controllerName}.${actionName}.${keyString}"
     }
 }

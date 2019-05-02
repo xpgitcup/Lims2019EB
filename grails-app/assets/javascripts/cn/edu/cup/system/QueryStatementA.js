@@ -9,17 +9,17 @@ $(function () {
     //变量获取
     listQueryStatementADiv = $("#listQueryStatementADiv");
     var localPageSizeQueryStatementA = readLocalStorage("pageSize" + document.title, 10);
+    var cPageNumber = readStorage("currentPage" + document.title, 1);
+    var total = countQueryStatementA(document.title)
 
     listQueryStatementADiv.panel({
-        href:loadQueryStatementA(document.title, cPageNumber, localPageSizeQueryStatementA)
+        href: loadQueryStatementA(document.title, cPageNumber, localPageSizeQueryStatementA)
     });
 
     /*
     * 设置分页参数
     * */
     var paginationQueryStatementADiv = $("#paginationQueryStatementADiv")
-    var cPageNumber = readStorage("currentPage" + document.title, 1);
-    var total = countQueryStatementA(document.title)
     paginationQueryStatementADiv.pagination({
         pageSize: localPageSizeQueryStatementA,
         total: total,
@@ -38,11 +38,12 @@ $(function () {
 * 统计函数
 * */
 function countQueryStatementA(title) {
-    console.info(document.title + "+统计......");
+    //console.info(document.title + "+统计......");
     var append = setupAppendParamsQueryStatementA();
     var url = "operation4QueryStatementA/count?key=" + title + append
-    console.info(document.title + " : " + url);
+    //console.info(document.title + " : " + url);
     var total = ajaxCalculate(url);
+    console.info(document.title + "+统计......" + total);
     return total
 }
 
@@ -50,7 +51,7 @@ function countQueryStatementA(title) {
 * 数据加载函数
 * */
 function loadQueryStatementA(title, page, pageSize) {
-    console.info(document.title + "+数据加载......" + title + " 第" + page + "页/" + pageSize);
+    console.info("数据加载：" + title + " 第" + page + "页/" + pageSize);
     var append = setupAppendParamsQueryStatementA();
     var params = getParams(page, pageSize);    //getParams必须是放在最最前面！！
     var url = "operation4QueryStatementA/list" + params + "&key=" + title + append;
@@ -60,7 +61,20 @@ function loadQueryStatementA(title, page, pageSize) {
 
 function setupAppendParamsQueryStatementA() {
     // 根据sessionStorage的参数，设置相应的附加参数，不同的标签的--都在各自页面考虑，所以不带参数
-    return "";
+    var append = ""
+    var filter = readStorage("filter" + document.title, "false");
+    var keyString = readStorage("keyString" + document.title, "");
+    switch (filter) {
+        case "true":
+            append = "待编辑"
+            break;
+        case "like":
+            append = "&like=" + keyString;
+            $("#currentFilter").html(keyString)
+            break
+    }
+
+    return append;
 }
 
 /*
@@ -68,7 +82,7 @@ function setupAppendParamsQueryStatementA() {
 * */
 function listToDo() {
     console.info(document.title + "+待完成......");
-    sessionStorage.setItem("filter" + document.title, true)
+    sessionStorage.setItem("filter" + document.title, "true")
     location.reload();
 }
 
@@ -77,6 +91,18 @@ function listToDo() {
 * */
 function clearFilter() {
     sessionStorage.setItem("filter" + document.title, false)
+    location.reload();
+}
+
+
+/*
+* 查询
+* */
+function queryStatement() {
+    var keyString = document.getElementById("keyString");
+    console.info("查询..." + keyString.value);
+    sessionStorage.setItem("filter" + document.title, "like")
+    sessionStorage.setItem("keyString" + document.title, keyString.value)
     location.reload();
 }
 

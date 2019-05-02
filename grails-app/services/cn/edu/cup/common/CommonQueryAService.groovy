@@ -31,6 +31,7 @@ class CommonQueryAService {
                 println("列表查询：${queryString}")
                 if (queryStatement.isSQL) {
                 } else {
+                    (queryString, leftParams) = processSpecailParameter(queryString, leftParams)
                     objectList = QueryStatementA.executeQuery(queryString, leftParams)
                     result.objectList = objectList
                 }
@@ -55,6 +56,7 @@ class CommonQueryAService {
                 if (queryStatement.isSQL) {
                     count = 0
                 } else {
+                    (queryString, leftParams) = processSpecailParameter(queryString, leftParams)
                     count = QueryStatementA.executeQuery(queryString, leftParams)
                 }
             }
@@ -89,6 +91,7 @@ class CommonQueryAService {
             )
             queryStatementAService.save(queryStatement)
         }
+        println("参数值：${leftParams}")
         [queryStatement, leftParams]
     }
 
@@ -114,4 +117,17 @@ class CommonQueryAService {
         [controllerName, actionName, paramsString, formatString, keyString, tmpps]
     }
 
+    /*
+    处理特殊参数
+    * */
+    def processSpecailParameter(queryString, Map leftParams) {
+        def nq = queryString
+        if (leftParams.containsKey("like")) {
+            def value = leftParams.get("like")
+            def likeValue = "'%${value}%'"
+            nq = queryString.replace(":like", likeValue)
+            leftParams.remove("like")
+        }
+        return [nq, leftParams]
+    }
 }
