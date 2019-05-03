@@ -24,7 +24,7 @@
 
 <div class="easyui-panel">
     <div id="edit-queryStatementA" class="content scaffold-edit" role="main">
-        <h1><g:message code="default.edit.label" args="[entityName]"/></h1>
+        <h2><g:message code="default.edit.label" args="[entityName]"/>---${this.queryStatementA.actionName}.${this.queryStatementA.keyString}</h2>
         <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>
         </g:if>
@@ -40,6 +40,11 @@
             <g:hiddenField name="version" value="${this.queryStatementA?.version}"/>
             <fieldset class="form">
                 <!--f:all bean="queryStatementA"/-->
+
+                <div class='fieldcontain'>
+                    <label for='paramsString'>参数列表：</label>
+                    ${this.queryStatementA.paramsString}
+                </div>
 
                 <div class='fieldcontain'>
                     <label for='queryString'>Query String</label>

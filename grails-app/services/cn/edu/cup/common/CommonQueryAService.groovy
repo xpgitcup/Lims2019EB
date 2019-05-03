@@ -90,6 +90,7 @@ class CommonQueryAService {
                     paramsString: paramsString
             )
             queryStatementAService.save(queryStatement)
+            println("创建查询：${queryStatement}")
         }
         println("参数值：${leftParams}")
         [queryStatement, leftParams]

@@ -71,7 +71,8 @@ class SystemCommonService {
             ss = new SystemStatus(
                     sessionId: sid,
                     userName: request.session.userName,
-                    userRole: user.userRoles()
+                    userRole: user.userRoles(),
+                    ip: request.getRemoteAddr()
             )
         }
         systemStatusService.save(ss)

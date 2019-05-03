@@ -6,6 +6,8 @@ import cn.edu.cup.system.SystemStatus
 import cn.edu.cup.system.SystemUser
 import grails.converters.JSON
 
+import java.text.SimpleDateFormat
+
 class HomeController {
 
     def systemCommonService
@@ -14,7 +16,20 @@ class HomeController {
     def systemUserService
     def commonQueryAService
 
-    def prepareParams() { }
+    def prepareParams() {
+        def pkey = "${params.key}"
+        // 计算起始时间
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, - 7);
+        Date monday = c.getTime();
+        String preMonday = sdf.format(monday);
+        println("7 天以前 ：${preMonday}");
+        // 更新参数
+        if (pkey.contains("近7天")) {
+            params.startDate = monday
+        }
+    }
 
     def processResult(result, params) {
         return result
@@ -178,7 +193,10 @@ class HomeController {
 
     def logout() {
         def pscontext = request.session.servletContext
-        systemCommonService.updateSystemStatus(request, params)
+        // 登陆后--记录
+        if (session.systemUser) {
+            systemCommonService.updateSystemStatus(request, params)
+        }
         if (session.systemUser) {
             println("${session.systemUser.userName}退出...")
             def logoutUser = session.systemUser.personName()

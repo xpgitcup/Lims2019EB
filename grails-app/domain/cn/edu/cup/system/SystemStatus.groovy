@@ -7,6 +7,7 @@ class SystemStatus {
     Date logoutTime
     String userName
     String userRole
+    String ip
 
     static hasMany = [items: SystemStatusItem, statusParameters: StatusParameter]
 
@@ -16,6 +17,7 @@ class SystemStatus {
         logoutTime(nullable: true)
         userName(nullable: true)
         userRole(nullable: true)
+        ip(nullable: true)
     }
 
     String toString() {

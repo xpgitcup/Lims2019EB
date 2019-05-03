@@ -20,9 +20,15 @@ $(function () {
             //------------------------------------------------------------------------------------------------------
             //记录当前页
             var cPageNumber = readStorage("currentPage" + document.title + title, 1);
-            loadLims2019EB(title, cPageNumber, localPageSizeLims2019EB)
-            // 设置翻页
-            configPagination(title);
+            if (title!="完成度") {
+                loadLims2019EB(title, cPageNumber, localPageSizeLims2019EB)
+            } else {
+                calculate();
+            }
+            if (title!="完成度") {
+                // 设置翻页
+                configPagination(title);
+            }
         }
     });
     // 打开缺省的标签
@@ -77,5 +83,9 @@ function loadLims2019EB(title, page, pageSize) {
 
 function setupAppendParamsLims2019EB() {
     // 根据sessionStorage的参数，设置相应的附加参数，不同的标签的--都在各自页面考虑，所以不带参数
-    return "";
+    return "-登录前";
+}
+
+function calculate() {
+
 }

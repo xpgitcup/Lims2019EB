@@ -80,7 +80,9 @@ class InitService {
         scriptList.each { e ->
             switch (e.key) {
                 case "dir":
-                    loadScripts("${webRootDir}/${e.value}")
+                    e.value.each { ee ->
+                        loadScripts("${webRootDir}/${ee}")
+                    }
                     break
                 case "file":
                     def sfile = new File("${webRootDir}/${e.value}")

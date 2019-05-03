@@ -19,18 +19,19 @@
 </div>
 
 <div class="container-cup">
+
     <div class="easyui-tabs" id="listHomeDiv">
         <div title="我领导的" data-options="closeable:false">
             <div id="list我领导的Div"></div>
-            <div id="pagination我领导的Div" class="easyui-pagination"></div>
+            <div id="paginationHome我领导的Div" class="easyui-pagination"></div>
         </div>
         <div title="我参与的" data-options="closeable:false">
             <div id="list我参与的Div"></div>
-            <div id="pagination我参与的Div" class="easyui-pagination"></div>
+            <div id="paginationHome我参与的Div" class="easyui-pagination"></div>
         </div>
         <div title="我管理的" data-options="closeable:false">
             <div id="list我管理的Div"></div>
-            <div id="pagination我管理的Div" class="easyui-pagination"></div>
+            <div id="paginationHome我管理的Div" class="easyui-pagination"></div>
         </div>
     </div>
 </div>

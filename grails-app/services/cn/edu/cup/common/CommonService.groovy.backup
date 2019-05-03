@@ -2,7 +2,6 @@ package cn.edu.cup.common
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.serializer.SerializerFeature
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter
 import grails.gorm.transactions.Transactional
 import grails.util.Environment
 import org.springframework.web.context.request.RequestContextHolder
@@ -41,21 +40,9 @@ class CommonService {
                 SerializerFeature.PrettyFormat,
                 SerializerFeature.SkipTransientField
         )*/
-
-        if (objects?.size() < 1) {
-            println("数组是空的！")
-            return
-        }
-
-        // id字段也应该忽略
-        SimplePropertyPreFilter filter = new SimplePropertyPreFilter()
-        filter.getExcludes().add("id");
-
-        // 忽略非用户定义的属性
         def jsonString = com.alibaba.fastjson.JSON.toJSONString(objects,
-                filter,
                 SerializerFeature.PrettyFormat,
-                SerializerFeature.IgnoreNonFieldGetter
+                SerializerFeature.IgnoreNonFieldGetter,
         )
         def printWriter = new PrintWriter(jsonFile, "utf-8")
         printWriter.write(jsonString)
