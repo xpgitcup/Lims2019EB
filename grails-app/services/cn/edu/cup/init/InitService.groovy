@@ -6,6 +6,7 @@ import cn.edu.cup.basic.Teacher
 import cn.edu.cup.lims.Plan
 import cn.edu.cup.lims.ThingType
 import cn.edu.cup.system.DataRootPath
+import cn.edu.cup.system.QueryStatementA
 import cn.edu.cup.system.SystemAttribute
 import cn.edu.cup.system.SystemMenu
 import cn.edu.cup.system.SystemUser
@@ -30,6 +31,7 @@ class InitService {
     def planService
     def dataRootPathService
     def commonLimsService
+    def queryStatementAService
 
     /**
      * 初始化代码__开发环境下的初始化代码
@@ -136,6 +138,15 @@ class InitService {
             def dataRootPaths = importObjects(dataRootPathFileName, DataRootPath.class, null)
             dataRootPaths.each { e ->
                 dataRootPathService.save(e)
+            }
+        }
+
+        // 处理SQL数据
+        def queryStatementAFileName = "${webRootDir}/config/queryStatementa.json"
+        if (queryStatementAService.count() < 1) {
+            def queryStatementAs = importObjects(queryStatementAFileName, QueryStatementA.class, null)
+            queryStatementAs.each { e ->
+                queryStatementAService.save(e)
             }
         }
 

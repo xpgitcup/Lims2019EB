@@ -1,44 +1,140 @@
-var operation4ThingTypeCircleDiv;
-var jsTitleThingTypeCircle = ["任务分配"];
-var title4ThingTypeCircle = jsTitleThingTypeCircle;
-var tabsTitle = "任务分配";
-var localPageSizeThingTypeCircle = 10;
+//全局变量定义
+var listThingTypeCircleDiv;
+var localPageSizeThingTypeCircle;
+//全局变量定义
+var treeViewThingTypeUl;
+//全局变量定义
+var treeViewPersonTitleUl;
 
 $(function () {
-    console.info(jsTitleThingTypeCircle + "......");
 
-    operation4ThingTypeCircleDiv = $("#operation4ThingTypeCircleDiv");
-    var settings = {
-        divId: operation4ThingTypeCircleDiv,
-        titles: title4ThingTypeCircle,
-        tabsTitle: tabsTitle,
+    console.info("加载..." + document.title);
+
+    //变量获取
+    listThingTypeCircleDiv = $("#listThingTypeCircleDiv");
+    var localPageSizeThingTypeCircle = readLocalStorage("pageSize" + document.title, 10);
+    var cPageNumber = readStorage("currentPage" + document.title, 1);
+    var total = countThingTypeCircle(document.title)
+
+    listThingTypeCircleDiv.panel({
+        href:loadThingTypeCircle(document.title, cPageNumber, localPageSizeThingTypeCircle)
+    });
+
+    /*
+    * 设置分页参数
+    * */
+    var paginationThingTypeCircleDiv = $("#paginationThingTypeCircleDiv")
+    paginationThingTypeCircleDiv.pagination({
         pageSize: localPageSizeThingTypeCircle,
+        total: total,
         pageList: [1, 3, 5, 10, 20, 30],
-        loadFunction: loadThingTypeCircle,
-        countFunction: countThingTypeCircle
-    }
-
-    configDisplayUI(settings);
-
-    //静态设置--树形结构
-    thingTypeTree = $("#thingTypeTree");
-    personTitleTree = $("#personTitleTree");
-
-    thingTypeTree.tree({
-        url: "operation4ThingType//getTreeViewData",
-        onSelect: function (node) {
-            $("#thingType").attr("value", node.attributes[0])
+        showPageList: false,
+        pageNumber: cPageNumber,
+        onSelectPage: function (pageNumber, pageSize) {
+            sessionStorage.setItem("currentPage" + document.title, pageNumber);     //记录当前页面
+            loadThingTypeCircle(document.title, pageNumber, pageSize);
         }
     })
 
-    personTitleTree.tree({
+    //变量获取
+    treeViewThingTypeUl = $("#treeViewThingTypeUl");
+
+    treeViewThingTypeUl.tree({
+        url: "operation4ThingType/getTreeViewData",
+        onSelect: function (node) {
+            console.info("树形结构节点选择：" + node.target.id);
+            sessionStorage.setItem("currentNode" + document.title, node.target.id);
+            treeNodeSelectedThingType(node);
+        },
+        onLoadSuccess: function () {
+            var cnodeid = readStorage("currentNode" + document.title, 0);
+            console.info("上一次：" + cnodeid);
+            treeViewThingTypeUl.tree("collapseAll");
+            if (cnodeid != 0) {
+                console.info("扩展到：" + cnodeid);
+                var cnode = $("#" + cnodeid);
+                treeViewThingTypeUl.tree("expandTo", cnode);
+                treeViewThingTypeUl.tree("select", cnode);
+            }
+        }
+    })
+
+    //变量获取
+    treeViewPersonTitleUl = $("#treeViewPersonTitleUl");
+
+    treeViewPersonTitleUl.tree({
         url: "operation4PersonTitle/getTreeViewData",
         onSelect: function (node) {
-            $("#personTitle").attr("value", node.attributes[0])
+            console.info("树形结构节点选择：" + node.target.id);
+            sessionStorage.setItem("currentNode" + document.title, node.target.id);
+            treeNodeSelectedPersonTitle(node);
+        },
+        onLoadSuccess: function () {
+            var cnodeid = readStorage("currentNode" + document.title, 0);
+            console.info("上一次：" + cnodeid);
+            treeViewPersonTitleUl.tree("collapseAll");
+            if (cnodeid != 0) {
+                console.info("扩展到：" + cnodeid);
+                var cnode = $("#" + cnodeid);
+                treeViewPersonTitleUl.tree("expandTo", cnode);
+                treeViewPersonTitleUl.tree("select", cnode);
+            }
         }
     })
 
 });
+
+/*
+* 统计函数
+* */
+function countThingTypeCircle(title) {
+    console.info(document.title + "+统计......");
+    var append = setupAppendParamsThingTypeCircle();
+    var url = "operation4ThingTypeCircle/count?key=" + title + append
+    console.info(document.title + " : " + url);
+    var total = ajaxCalculate(url);
+    return total
+}
+
+/*
+* 数据加载函数
+* */
+function loadThingTypeCircle(title, page, pageSize) {
+    console.info("数据加载：" + title + " 第" + page + "页/" + pageSize);
+    var append = setupAppendParamsThingTypeCircle();
+    var params = getParams(page, pageSize);    //getParams必须是放在最最前面！！
+    var url = "operation4ThingTypeCircle/list" + params + "&key=" + title + append;
+    console.info(document.title + " : " + url);
+    ajaxRun(url, 0, "list" + title + "Div");
+}
+
+function setupAppendParamsThingTypeCircle() {
+    // 根据sessionStorage的参数，设置相应的附加参数，不同的标签的--都在各自页面考虑，所以不带参数
+    return "";
+}
+
+/*
+* 节点选择
+* */
+function treeNodeSelectedThingType(node) {
+    console.info("选择" + node);
+    $("#thingType").attr("value", node.attributes[0])
+}
+
+/*
+* 节点选择
+* */
+function treeNodeSelectedPersonTitle(node) {
+    console.info("选择" + node);
+    $("#personTitle").attr("value", node.attributes[0])
+}
+
+
+
+
+
+
+/////////////////////////////////////////////////////////
 
 function deleteItem(id) {
     console.info("删除：" + id);
@@ -78,21 +174,3 @@ function changeUpNode(node) {
     ajaxRun("operation4ThingTypeCircle/show", node.attributes[0], "showInformationDiv");
 }
 
-/*
-* 统计函数
-* */
-function countThingTypeCircle(title) {
-    console.info(jsTitleThingTypeCircle + "+统计......");
-    shiftDisplay(title);
-    var total = ajaxCalculate("operation4ThingTypeCircle/count?key=" + title);
-    return total
-}
-
-/*
-* 数据加载函数
-* */
-function loadThingTypeCircle(title, page, pageSize) {
-    console.info(jsTitleThingTypeCircle + "+数据加载......" + title + " 第" + page + "页/" + pageSize);
-    var params = getParams(page, pageSize);    //getParams必须是放在最最前面！！
-    ajaxRun("operation4ThingTypeCircle/list" + params + "&key=" + title, 0, "list" + title + "Div");
-}

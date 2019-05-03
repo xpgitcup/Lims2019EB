@@ -1,99 +1,114 @@
-/*
-* 处理通用计划
-* 2019.03.14
-* */
-
-var operation4PlanDiv;
-var operation4ThingTypeUL;
-var jsTitle = "通用计划";
-var title4Plan = [jsTitle]
-var isTreeView4Plan = [false]
-var pagination4PlanDiv;
-//var treeData4PlanTitle = ["operation4PlanTitle/getTreeViewData"]
-var pageSize4Plan = 10;
-
+//全局变量定义
+var treeViewThingTypeUl;
+//全局变量定义
+var listPlanDiv;
+var localPageSizePlan;
+var paginationPlanDiv;
 
 $(function () {
-    console.info(jsTitle + "......");
-    var title = jsTitle;
-    /*
-    * 左边显示任务类型
-    * */
-    operation4ThingTypeUL = $("#operation4ThingTypeUL");
-    operation4ThingTypeUL.tree({
+
+    console.info("加载..." + document.title);
+
+    //变量获取
+    treeViewThingTypeUl = $("#treeViewThingTypeUl");
+
+    treeViewThingTypeUl.tree({
         url: "operation4ThingType/getTreeViewData",
         onSelect: function (node) {
             console.info("树形结构节点选择：" + node.target.id);
-            $.cookie("currentNode" + title, node.target.id);
-            changeUpNode(node);
+            sessionStorage.setItem("currentNode" + document.title, node.target.id);
+            treeNodeSelectedThingType(node);
         },
         onLoadSuccess: function () {
-            var cnodeid = readCookie("currentNode" + title, 0);
+            var cnodeid = readStorage("currentNode" + document.title, 0);
             console.info("上一次：" + cnodeid);
-            operation4ThingTypeUL.tree("collapseAll");
+            treeViewThingTypeUl.tree("collapseAll");
             if (cnodeid != 0) {
                 console.info("扩展到：" + cnodeid);
                 var cnode = $("#" + cnodeid);
-                operation4ThingTypeUL.tree("expandTo", cnode);
-                operation4ThingTypeUL.tree("select", cnode);
+                treeViewThingTypeUl.tree("expandTo", cnode);
+                treeViewThingTypeUl.tree("select", cnode);
             }
         }
     })
 
+    //变量获取
+    listPlanDiv = $("#listPlanDiv");
+    var localPageSizePlan = readLocalStorage("pageSize" + document.title, 10);
+    var cPageNumber = readStorage("currentPage" + document.title, 1);
+    var total = countPlan(document.title)
+
+    listPlanDiv.panel({
+        href: loadPlan(document.title, cPageNumber, localPageSizePlan)
+    });
+
     /*
-    * 右边的
+    * 设置分页参数
     * */
-
-    var total = countPlan();
-    var title = jsTitle;
-    var localPageSize = pageSize4Plan;
-
-    pagination4PlanDiv = $("#pagination4PlanDiv");
-    pagination4PlanDiv.pagination({
-        pageSize: localPageSize,
+    paginationPlanDiv = $("#paginationPlanDiv")
+    paginationPlanDiv.pagination({
+        pageSize: localPageSizePlan,
         total: total,
         pageList: [1, 3, 5, 10, 20, 30],
-        showPageList: true,
-        //pageNumber: currentPage,
-        //displayMsg: paginationMessage,
-        onSelectPage: function (pageNumber, localPageSize) {
-            //console.info("setupPaginationParams4TabPage: " + title)
-            console.info("分页设置：" + localPageSize);
-            $.cookie("currentPage" + title, pageNumber);     //记录当前页面
-            loadPlan(pageNumber, pageSize);
+        showPageList: false,
+        pageNumber: cPageNumber,
+        onSelectPage: function (pageNumber, pageSize) {
+            sessionStorage.setItem("currentPage" + document.title, pageNumber);     //记录当前页面
+            loadPlan(document.title, pageNumber, pageSize);
         }
     })
 
 });
 
-function loadPlan(page, pageSize) {
-    var node = readCookie("currentNode", 0);
-    //ajaxRun("operation4Plan/list?key=" + jsTitle4ProjectPlan + "&keyString=" + node + "&thingTypeId=" + node, 0, "operation4PlanDiv");
-    console.info("每页大小：" + pageSize);
-    var params = getParams(page, pageSize);    //getParams必须是放在最最前面！！
-    ajaxRun("operation4Plan/list" + params + "&key=" + jsTitle + "&thingTypeId=" + node, 0, "operation4PlanDiv");
-}
-
-function countPlan() {
-    var node = readCookie("currentNode", 0);
-    //var count = ajaxCalculate("operation4Plan/count?key=" + jsTitle4ProjectPlan + "&keyString=" + node + "&thingTypeId=" + node);
-    var count = ajaxCalculate("operation4Plan/count?key=" + jsTitle + "&thingTypeId=" + node);
-    return count;
-}
-
 /*
-* 节点被选择。。。
+* 节点选择
 * */
-function changeUpNode(node) {
-    console.info("修改根节点的id...")
-    $.cookie("currentNode", node.attributes[0]);
-    var total = countPlan();
+function treeNodeSelectedThingType(node) {
+    console.info("选择" + node);
     $("#createItem").attr('href', 'javascript: createItemAuto(' + node.attributes[0] + ')');
     $("#createItem").html("自动创建" + node.attributes[0] + '的计划');
     $("#editItem").attr('href', 'javascript: editItem(' + node.attributes[0] + ')');
     $("#editItem").html("编辑" + node.attributes[0] + '计划');
     $("#currentTitle").html(node.text);
-    loadPlan(1, pageSize4Plan);
+
+    sessionStorage.setItem("currentThingTypeId" + document.title, node.attributes[0]);
+
+    var localPageSizePlan = readLocalStorage("pageSize" + document.title, 10);
+    var cPageNumber = readStorage("currentPage" + document.title, 1);
+    var total = countPlan(document.title)
+    loadPlan(document.title, cPageNumber, localPageSizePlan);
+    paginationPlanDiv.pagination({total: total});
+}
+
+/*
+* 统计函数
+* */
+function countPlan(title) {
+    console.info(document.title + "+统计......");
+    var append = setupAppendParamsPlan();
+    var url = "operation4Plan/count?key=" + title + append
+    console.info(document.title + " : " + url);
+    var total = ajaxCalculate(url);
+    return total
+}
+
+/*
+* 数据加载函数
+* */
+function loadPlan(title, page, pageSize) {
+    console.info("数据加载：" + title + " 第" + page + "页/" + pageSize);
+    var append = setupAppendParamsPlan();
+    var params = getParams(page, pageSize);    //getParams必须是放在最最前面！！
+    var url = "operation4Plan/list" + params + "&key=" + title + append;
+    console.info(document.title + " : " + url);
+    ajaxRun(url, 0, "list" + title + "Div");
+}
+
+function setupAppendParamsPlan() {
+    // 根据sessionStorage的参数，设置相应的附加参数，不同的标签的--都在各自页面考虑，所以不带参数
+    currentThingTypeId = readStorage("currentThingTypeId" + document.title, 1);
+    var append = "&thingType=" + currentThingTypeId;
+    return append;
 }
 
 function deleteItem(id) {
@@ -109,7 +124,7 @@ function editItem(id) {
 }
 
 function showItem(id) {
-    ajaxRun("operation4Plan/show?view=showTypePlan", id, "operation4PlanDiv");
+    ajaxRun("operation4Plan/show?view=showTypePlan", id, "operation4PlanItemDiv");
 }
 
 function createItemAuto(id) {

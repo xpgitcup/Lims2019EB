@@ -1,12 +1,12 @@
-<%=packageName ? "package ${packageName}" : ''%>
+package cn.edu.cup.lims
 
 import grails.converters.JSON
 import grails.validation.ValidationException
 import static org.springframework.http.HttpStatus.*
 
-class ${className}Controller {
+class ThingController {
 
-    ${className}Service ${propertyName}Service
+    ThingService thingService
     def commonQueryAService
     def commonService
 
@@ -17,18 +17,18 @@ class ${className}Controller {
         def userResult = false
         params.max = Math.min(max ?: 10, 100)
         if (params.title) {
-            model.${propertyName}Title = params.title
+            model.thingTitle = params.title
             userResult = true
         }
         if (params.jsRoutine) {
-            model.${propertyName}JsRoutine = params.jsRoutine
+            model.thingJsRoutine = params.jsRoutine
             userResult = true
         }
 
         if (userResult) {
             model
         } else {
-            respond ${propertyName}Service.list(params), model:[${propertyName}Count: ${propertyName}Service.count()]
+            respond thingService.list(params), model:[thingCount: thingService.count()]
         }
     }
 
@@ -38,12 +38,12 @@ class ${className}Controller {
             view = params.view
         }
 
-        def ${propertyName} = ${propertyName}Service.get(id)
+        def thing = thingService.get(id)
 
         if (request.xhr) {
-            render(template: view, model: [${propertyName}: ${propertyName}])
+            render(template: view, model: [thing: thing])
         } else {
-            respond ${propertyName}
+            respond thing
         }
     }
 
@@ -53,18 +53,18 @@ class ${className}Controller {
             view = params.view
         }
 
-        def ${propertyName} = new ${className}(params)
+        def thing = new Thing(params)
 
         if (request.xhr) {
-            render(template: view, model: [${propertyName}: ${propertyName}])
+            render(template: view, model: [thing: thing])
         } else {
-            respond ${propertyName}
+            respond thing
         }
     }
 
-    def save(${className} ${propertyName}) {
+    def save(Thing thing) {
 
-        if (${propertyName} == null) {
+        if (thing == null) {
             notFound()
             return
         }
@@ -80,16 +80,16 @@ class ${className}Controller {
         }
 
         try {
-            ${propertyName}Service.save(${propertyName})
-            flash.message = message(code: 'default.created.message', args: [message(code: '${propertyName}.label', default: '${className}'), ${propertyName}.id])
+            thingService.save(thing)
+            flash.message = message(code: 'default.created.message', args: [message(code: 'thing.label', default: 'Thing'), thing.id])
         } catch (ValidationException e) {
-            flash.message = ${propertyName}.errors
+            flash.message = thing.errors
         }
 
         withFormat {
-            js { render "alert('${propertyName}创建成功!')" }
+            js { render "alert('thing创建成功!')" }
 
-            json { render ${propertyName} as JSON }
+            json { render thing as JSON }
 
             '*' {
                 if (params.url) {
@@ -108,17 +108,17 @@ class ${className}Controller {
             view = params.view
         }
 
-        def ${propertyName} = ${propertyName}Service.get(id)
+        def thing = thingService.get(id)
 
         if (request.xhr) {
-            render(template: view, model: [${propertyName}: ${propertyName}])
+            render(template: view, model: [thing: thing])
         } else {
-            respond ${propertyName}
+            respond thing
         }
     }
 
-    def update(${className} ${propertyName}) {
-        if (${propertyName} == null) {
+    def update(Thing thing) {
+        if (thing == null) {
             notFound()
             return
         }
@@ -134,10 +134,10 @@ class ${className}Controller {
         }
 
         try {
-            ${propertyName}Service.save(${propertyName})
-            flash.message = message(code: 'default.updated.message', args: [message(code: '${propertyName}.label', default: '${className}'), ${propertyName}.id])
+            thingService.save(thing)
+            flash.message = message(code: 'default.updated.message', args: [message(code: 'thing.label', default: 'Thing'), thing.id])
         } catch (ValidationException e) {
-            flash.message = ${propertyName}.errors
+            flash.message = thing.errors
         }
 
         if (controller == "")
@@ -154,8 +154,8 @@ class ${className}Controller {
             return
         }
 
-        ${propertyName}Service.delete(id)
-        flash.message = message(code: 'default.deleted.message', args: [message(code: '${propertyName}.label', default: '${className}'), id])
+        thingService.delete(id)
+        flash.message = message(code: 'default.deleted.message', args: [message(code: 'thing.label', default: 'Thing'), id])
 
         def action = "index"
         if (params.nextAction) {
@@ -208,15 +208,15 @@ class ${className}Controller {
 
     def importFromJsonFile() {
 
-        def fileName = "\${commonService.webRootPath}/\${params.fileName}"
-        def objectList = commonService.importObjectArrayFromJsonFileName(fileName, ${className}.class)
+        def fileName = "${commonService.webRootPath}/${params.fileName}"
+        def objectList = commonService.importObjectArrayFromJsonFileName(fileName, Thing.class)
         if (objectList.size()>0) {
             // 先清空
-            ${className}.list().each { e ->
-                ${propertyName}Service.delete(e.id)
+            Thing.list().each { e ->
+                thingService.delete(e.id)
             }
             objectList.each { e ->
-                ${propertyName}Service.save(e)
+                thingService.save(e)
             }
         }
 
@@ -239,9 +239,9 @@ class ${className}Controller {
 
     def exportToJsonFile() {
 
-        def fileName = "\${commonService.webRootPath}/\${params.fileName}"
+        def fileName = "${commonService.webRootPath}/${params.fileName}"
 
-       def fjson = commonService.exportObjects2JsonString(${className}.list())
+       def fjson = commonService.exportObjects2JsonString(Thing.list())
         def printer = new File(fileName).newPrintWriter('utf-8')    //写入文件
         printer.println(fjson)
         printer.close()
@@ -267,7 +267,7 @@ class ${className}Controller {
     protected void notFound() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: '${propertyName}.label', default: '${className}'), params.id])
+                flash.message = message(code: 'default.not.found.message', args: [message(code: 'thing.label', default: 'Thing'), params.id])
                 redirect action: "index", method: "GET"
             }
             '*'{ render status: NOT_FOUND }
