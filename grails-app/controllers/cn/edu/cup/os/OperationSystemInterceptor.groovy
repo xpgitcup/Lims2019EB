@@ -17,7 +17,7 @@ class OperationSystemInterceptor {
     }
 
     boolean before() {
-        //println("${controllerName}，动作：${actionName}.之前...")
+        println("${controllerName}，动作：${actionName}.之前...")
         if (!session.systemUser) {
             //println("跳转...")
             redirect(controller: "home", action: "loginUI")

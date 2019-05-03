@@ -33,24 +33,28 @@
 <div class="easyui-tabs" id="listLims2019EBDiv">
     <div title="进度" data-options="closeable:false">
         <div id="list进度Div"></div>
+
         <div id="paginationLims2019EB进度Div" class="easyui-pagination"></div>
     </div>
+
     <div title="登录" data-options="closeable:false">
         <div id="list登录Div"></div>
+
         <div id="paginationLims2019EB登录Div" class="easyui-pagination"></div>
     </div>
+
     <div title="近7天进度" data-options="closeable:false">
         <div id="list近7天进度Div"></div>
+
         <div id="paginationLims2019EB近7天进度Div" class="easyui-pagination"></div>
     </div>
+
     <div title="近7天登录" data-options="closeable:false">
         <div id="list近7天登录Div"></div>
+
         <div id="paginationLims2019EB近7天登录Div" class="easyui-pagination"></div>
     </div>
-    <div title="完成度" data-options="closeable:false">
-        <div id="list完成度Div"></div>
-        <div id="paginationLims2019EB完成度Div" class="easyui-pagination"></div>
-    </div>
+
 </div>
 
 </body>

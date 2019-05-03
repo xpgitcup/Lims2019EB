@@ -1,25 +1,91 @@
-var operation4PersonDiv;
-var jsTitlePerson = ["教师", "学生", "专业", "年级"];
-var title4Person = jsTitlePerson;
-var tabsTitle = "人员维护";
-var localPageSizePerson = 10;
+//全局变量定义
+var listPersonDiv;
+var PersonTabNames =["教师","学生","专业","年级"];
+var localPageSizePerson;
 
 $(function () {
-    console.info(jsTitlePerson + "......");
+    console.info("加载..." + document.title);
 
-    operation4PersonDiv = $("#operation4PersonDiv");
-    var settings = {
-        divId: operation4PersonDiv,
-        titles: title4Person,
-        tabsTitle: tabsTitle,
-        pageSize: localPageSizePerson,
-        pageList: [1, 3, 5, 10],
-        loadFunction: loadPerson,
-        countFunction: countPerson
+    //变量获取
+    listPersonDiv = $("#listPersonDiv");
+    var defaultTab = listPersonDiv.tabs("tabs")[0].panel("options").title
+    var currentTab = readStorage("current" + document.title, defaultTab);
+    var localPageSizePerson = readLocalStorage("pageSize" + document.title, 10);
+    console.info("首次加载..." + currentTab);
+
+    listPersonDiv.tabs({
+        onSelect: function (title, index) {
+            //记录tabs的缺省页面，所以采用tabsName
+            console.info("选择标签：" + title + "--" + index);
+            sessionStorage.setItem("current" + document.title, title);
+            //------------------------------------------------------------------------------------------------------
+            //记录当前页
+            var cPageNumber = readStorage("currentPage" + document.title + title, 1);
+            loadPerson(title, cPageNumber, localPageSizePerson)
+            // 设置翻页
+            configPagination(title);
+        }
+    });
+    // 打开缺省的标签
+    listPersonDiv.tabs("select", currentTab);
+
+    var list教师Div = $("#list教师Div");
+    var cPageNumber = readStorage("currentPage" + document.title + "教师", 1);
+    console.info("panel首次加载.....")
+    list教师Div.panel({
+        href: loadPerson("教师", cPageNumber, localPageSizePerson)
+    })
+
+    /*
+    * 设置分页参数
+    * */
+    function configPagination(title) {
+        var paginationDiv = $("#paginationPerson" + title + "Div")
+        var cPageNumber = readStorage("currentPage" + document.title + title, 1);
+        var total = countPerson(title)
+        paginationDiv.pagination({
+            pageSize: localPageSizePerson,
+            total: total,
+            pageList: [1, 3, 5, 10, 20, 30],
+            showPageList: false,
+            pageNumber: cPageNumber,
+            onSelectPage: function (pageNumber, pageSize) {
+                sessionStorage.setItem("currentPage" + document.title + title, pageNumber);     //记录当前页面
+                loadPerson(title, pageNumber, pageSize);
+            }
+        })
     }
 
-    configDisplayUI(settings);
 });
+
+/*
+* 统计函数
+* */
+function countPerson(title) {
+    console.info(document.title + "+统计......");
+    var append = setupAppendParamsPerson();
+    var url = "operation4Person/count?key=" + title + append
+    console.info(document.title + " : " + url);
+    var total = ajaxCalculate(url);
+    return total
+}
+
+/*
+* 数据加载函数
+* */
+function loadPerson(title, page, pageSize) {
+    console.info(document.title + "+数据加载......" + title + " 第" + page + "页/" + pageSize);
+    var append = setupAppendParamsPerson();
+    var params = getParams(page, pageSize);    //getParams必须是放在最最前面！！
+    var url = "operation4Person/list" + params + "&key=" + title + append;
+    console.info(document.title + " : " + url);
+    ajaxRun(url, 0, "list" + title + "Div");
+}
+
+function setupAppendParamsPerson() {
+    // 根据sessionStorage的参数，设置相应的附加参数，不同的标签的--都在各自页面考虑，所以不带参数
+    return "";
+}
 
 /*
 * 定位到需要编辑的记录
@@ -57,21 +123,3 @@ function shiftDisplay(title) {
     }
 }
 
-/*
-* 统计函数
-* */
-function countPerson(title) {
-    console.info(jsTitlePerson + "+统计......");
-    shiftDisplay(title);
-    var total = ajaxCalculate("operation4Person/count?key=" + title);
-    return total
-}
-
-/*
-* 数据加载函数
-* */
-function loadPerson(title, page, pageSize) {
-    console.info(jsTitlePerson + "+数据加载......" + title + " 第" + page + "页/" + pageSize);
-    var params = getParams(page, pageSize);    //getParams必须是放在最最前面！！
-    ajaxRun("operation4Person/list" + params + "&key=" + title, 0, "list" + title + "Div");
-}

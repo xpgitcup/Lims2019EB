@@ -1,29 +1,48 @@
-var operation4PersonTitleDiv;
-var jsTitle = "人员类型";
-var title4PersonTitle = [jsTitle]
-var isTreeView4PersonTitle = [true]
-var treeData4PersonTitle = ["operation4PersonTitle/getTreeViewData"]
+//全局变量定义
+var treeViewPersonTitleUl;
 
 $(function () {
-    console.info(jsTitle + "......");
 
-    operation4PersonTitleDiv = $("#operation4PersonTitleDiv");
-    var settings = {
-        divId: operation4PersonTitleDiv,
-        titles: title4PersonTitle,
-        // 有关树形结构的设置
-        isTreeView: isTreeView4PersonTitle,
-        treeData: treeData4PersonTitle,
-        treeNodeDoSomeThing: changeUpNode, //当节点被选择
-        //paginationMessage: "",
-        pageList: [],
-        showPageList: false,
-        loadFunction: loadPersonTitle,
-        countFunction: countPersonTitle
-    }
+    console.info("加载..." + document.title);
 
-    configDisplayUI(settings);
+    //变量获取
+    treeViewPersonTitleUl = $("#treeViewPersonTitleUl");
+
+    treeViewPersonTitleUl.tree({
+        url: "operation4PersonTitle/getTreeViewData",
+        onSelect: function (node) {
+            console.info("树形结构节点选择：" + node.target.id);
+            sessionStorage.setItem("currentNode" + document.title, node.target.id);
+            treeNodeSelectedPersonTitle(node);
+        },
+        onLoadSuccess: function () {
+            var cnodeid = readStorage("currentNode" + document.title, 0);
+            console.info("上一次：" + cnodeid);
+            treeViewPersonTitleUl.tree("collapseAll");
+            if (cnodeid != 0) {
+                console.info("扩展到：" + cnodeid);
+                var cnode = $("#" + cnodeid);
+                treeViewPersonTitleUl.tree("expandTo", cnode);
+                treeViewPersonTitleUl.tree("select", cnode);
+            }
+        }
+    })
 });
+
+/*
+* 节点选择
+* */
+function treeNodeSelectedPersonTitle(node) {
+    console.info("选择" + node);
+    $("#createItem").attr('href', 'javascript: createItem(' + node.attributes[0] + ')');
+    $("#createItem").html("创建" + node.attributes[0] + '的子节点');
+    $("#editItem").attr('href', 'javascript: editItem(' + node.attributes[0] + ')');
+    $("#editItem").html("编辑" + node.attributes[0] + '节点');
+    $("#deleteItem").attr('href', 'javascript: deleteItem(' + node.attributes[0] + ')');
+    $("#deleteItem").html("删除" + node.attributes[0] + '节点');
+    $("#currentTitle").html(node.text);
+    showPersonTitle(node);
+}
 
 function deleteItem(id) {
     console.info("删除：" + id);
@@ -60,7 +79,6 @@ function editPersonTitle(id) {
 * 显示节点信息
 * */
 function showPersonTitle(node) {
-    console.info(jsTitle + "+节点显示......" + node);
     if (node) {
         var id = node.attributes[0];
         ajaxRun("operation4PersonTitle/show", id, "showPersonTitleDiv");
@@ -73,14 +91,6 @@ function showPersonTitle(node) {
 function changeUpNode(node) {
     console.info(jsTitle + "+节点选择......" + node);
     console.info("修改根节点的id...")
-    $("#createItem").attr('href', 'javascript: createItem(' + node.attributes[0] + ')');
-    $("#createItem").html("创建" + node.attributes[0] + '的子节点');
-    $("#editItem").attr('href', 'javascript: editItem(' + node.attributes[0] + ')');
-    $("#editItem").html("编辑" + node.attributes[0] + '节点');
-    $("#deleteItem").attr('href', 'javascript: deleteItem(' + node.attributes[0] + ')');
-    $("#deleteItem").html("删除" + node.attributes[0] + '节点');
-    $("#currentTitle").html(node.text);
-    showPersonTitle(node);
 }
 
 /*

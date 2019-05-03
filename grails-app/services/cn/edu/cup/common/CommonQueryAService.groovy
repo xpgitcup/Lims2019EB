@@ -2,6 +2,8 @@ package cn.edu.cup.common
 
 import cn.edu.cup.system.QueryStatementA
 import grails.gorm.transactions.Transactional
+import groovy.sql.GroovyRowResult
+import groovy.sql.Sql
 
 @Transactional
 class CommonQueryAService {
@@ -30,11 +32,12 @@ class CommonQueryAService {
                 def queryString = queryStatement.queryString
                 println("列表查询：${queryString}")
                 if (queryStatement.isSQL) {
+                    objectList = processParameters4SQL(queryString, leftParams)
                 } else {
                     (queryString, leftParams) = processSpecailParameter(queryString, leftParams)
                     objectList = QueryStatementA.executeQuery(queryString, leftParams)
-                    result.objectList = objectList
                 }
+                result.objectList = objectList
                 println("查询结果：${objectList}")
             }
         }
@@ -54,7 +57,8 @@ class CommonQueryAService {
                 def queryString = queryStatement.queryString
                 println("统计语句：${queryString}")
                 if (queryStatement.isSQL) {
-                    count = 0
+                    def c = processParameters4SQL(queryString, leftParams)
+                    count = [c[0].values()[0]]
                 } else {
                     (queryString, leftParams) = processSpecailParameter(queryString, leftParams)
                     count = QueryStatementA.executeQuery(queryString, leftParams)
@@ -121,6 +125,7 @@ class CommonQueryAService {
     /*
     处理特殊参数
     * */
+
     def processSpecailParameter(queryString, Map leftParams) {
         def nq = queryString
         if (leftParams.containsKey("like")) {
@@ -131,4 +136,42 @@ class CommonQueryAService {
         }
         return [nq, leftParams]
     }
+
+    /*
+    为SQL处理参数
+    * */
+
+    List<GroovyRowResult> processParameters4SQL(queryString, Map leftParams) {
+        def objectList
+        def db = new Sql(dataSource)
+        println("执行SQL ${queryString} 参数：${leftParams}")
+        // 处理分页
+        if (queryString.contains('limit')) {
+            println("开始处理分页参数:")
+            queryString = String.format(queryString, Integer.parseInt(leftParams.offset), Integer.parseInt(leftParams.max))
+            leftParams.remove("offset")
+            leftParams.remove("max")
+            println("植入分页控制：${queryString}")
+        }
+        // 剔除分页控制后
+        if (leftParams.size() > 0) {
+            //objectList = db.rows(ps, sql)
+            def realSql
+            leftParams.keySet().each { e ->
+                def v = "${leftParams.get(e)}"
+                println("植入参数：${e} ${v}")
+                v = v.replace("[", "")
+                v = v.replace("]", "")
+                realSql = queryString.replaceAll(e, v)
+                queryString = realSql
+            }
+            println("植入参数后最终结果：${queryString}")
+            objectList = db.rows(queryString)//, ps)
+        } else {
+            objectList = db.rows(queryString)
+        }
+        println("列表SQL: ${objectList}")
+        objectList
+    }
+
 }

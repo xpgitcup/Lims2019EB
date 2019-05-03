@@ -471,7 +471,7 @@ th:hover, tr:hover {
 
 /* PAGINATION */
 
-.paginationGrails {
+.pagination {
     border-top: 0;
     margin: 0.8em 1em 0.3em;
     padding: 0.3em 0.2em;
@@ -482,8 +482,8 @@ th:hover, tr:hover {
     background-color: #EFEFEF;
 }
 
-.paginationGrails a,
-.paginationGrails .currentStep {
+.pagination a,
+.pagination .currentStep {
     color: #666666;
     display: inline-block;
     margin: 0 0.1em;
@@ -494,16 +494,16 @@ th:hover, tr:hover {
     border-radius: 0.3em;
 }
 
-.paginationGrails a:hover, .paginationGrails a:focus,
-.paginationGrails .currentStep {
+.pagination a:hover, .pagination a:focus,
+.pagination .currentStep {
     background-color: #999999;
     color: #ffffff;
     outline: none;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
 }
 
-.no-borderradius .paginationGrails a:hover, .no-borderradius .paginationGrails a:focus,
-.no-borderradius .paginationGrails .currentStep {
+.no-borderradius .pagination a:hover, .no-borderradius .pagination a:focus,
+.no-borderradius .pagination .currentStep {
     background-color: transparent;
     color: #444444;
     text-decoration: underline;

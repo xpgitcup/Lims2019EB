@@ -11,7 +11,7 @@
  Target Server Version : 50725
  File Encoding         : 65001
 
- Date: 03/05/2019 10:54:31
+ Date: 03/05/2019 19:22:22
 */
 
 SET NAMES utf8mb4;
@@ -33,7 +33,7 @@ CREATE TABLE `query_statementa`  (
   `key_string` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `view_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 48 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 56 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of query_statementa
@@ -56,5 +56,13 @@ INSERT INTO `query_statementa` VALUES (43, 2, NULL, 'home', b'0', 'list', '[max,
 INSERT INTO `query_statementa` VALUES (44, 3, NULL, 'home', b'0', 'count', '[startDate]', 'select count(*) from Progress progress\r\nwhere progress.regDate>:startDate', '近7天进度-登录前', NULL);
 INSERT INTO `query_statementa` VALUES (45, 1, NULL, 'home', b'0', 'count', '[startDate]', 'select count(*) from SystemStatus systemStatus\r\nwhere loginTime>:startDate', '近7天登录-登录前', NULL);
 INSERT INTO `query_statementa` VALUES (46, 1, NULL, 'home', b'0', 'list', '[max, offset, startDate]', 'from SystemStatus systemStatus where loginTime>:startDate\r\norder by loginTime desc', '近7天登录-登录前', 'listSystemStatus');
+INSERT INTO `query_statementa` VALUES (48, 1, NULL, 'operation4Person', b'0', 'list', '[max, offset]', 'from Teacher teacher\r\norder by name', '教师', 'listTeacher');
+INSERT INTO `query_statementa` VALUES (49, 2, NULL, 'operation4Person', b'0', 'list', '[max, offset]', 'from Student student \r\norder by personTitle, supervisor, gradeName,  major, code', '学生', 'listStudent');
+INSERT INTO `query_statementa` VALUES (50, 1, NULL, 'operation4Person', b'0', 'count', '[]', 'select count(*)\r\nfrom Student student', '学生', NULL);
+INSERT INTO `query_statementa` VALUES (51, 1, NULL, 'operation4Person', b'0', 'list', '[max, offset]', 'from Major major order by name', '专业', 'listMajor');
+INSERT INTO `query_statementa` VALUES (52, 1, NULL, 'operation4Person', b'0', 'count', '[]', 'select count(*) from Major major', '专业', NULL);
+INSERT INTO `query_statementa` VALUES (53, 2, NULL, 'operation4Person', b'1', 'count', '[]', 'SELECT Count(DISTINCT person.grade_name) FROM person WHERE person.grade_name IS NOT NULL', '年级', NULL);
+INSERT INTO `query_statementa` VALUES (54, 1, NULL, 'operation4Person', b'1', 'list', '[max, offset]', 'SELECT DISTINCT person.grade_name FROM person WHERE person.grade_name IS NOT NULL limit %d,%d', '年级', 'listGradeName');
+INSERT INTO `query_statementa` VALUES (55, 2, NULL, 'operation4Person', b'0', 'count', '[]', 'select count(*) \r\nfrom Teacher teacher', '教师', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

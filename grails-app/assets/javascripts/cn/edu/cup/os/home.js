@@ -7,11 +7,6 @@ $(function () {
 
     console.info("加载..." + document.title);
 
-    /* 统计在线人数 */
-    ajaxRun("home/countOnlineUsers", 0, "onlineCount")
-    /* 显示菜单*/
-    ajaxRun("home/getMenuItems", 0, "applicationMenuDiv")
-
     //变量获取
     listHomeDiv = $("#listHomeDiv");
     var currentTab = readStorage("current" + document.title, "");
