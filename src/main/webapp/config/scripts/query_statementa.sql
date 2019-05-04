@@ -3,15 +3,15 @@
 
  Source Server         : sample
  Source Server Type    : MySQL
- Source Server Version : 50725
+ Source Server Version : 80015
  Source Host           : localhost:3306
  Source Schema         : lims2019db
 
  Target Server Type    : MySQL
- Target Server Version : 50725
+ Target Server Version : 80015
  File Encoding         : 65001
 
- Date: 04/05/2019 15:30:33
+ Date: 04/05/2019 21:53:03
 */
 
 SET NAMES utf8mb4;
@@ -24,14 +24,14 @@ DROP TABLE IF EXISTS `query_statementa`;
 CREATE TABLE `query_statementa`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `version` bigint(20) NOT NULL,
-  `format_string` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `format_string` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `controller_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `issql` bit(1) NOT NULL,
   `action_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `params_string` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `query_string` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `params_string` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `query_string` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `key_string` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `view_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `view_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -72,11 +72,11 @@ INSERT INTO `query_statementa` VALUES (31, 1, NULL, 'operation4Plan', b'0', 'cou
 INSERT INTO `query_statementa` VALUES (32, 1, NULL, 'operation4Plan', b'0', 'list', '[max, offset, thingType]', 'from Plan plan  \r\nwhere plan.thingType.id=cast(:thingType as integer) and plan.upPlan is null \r\norder by updateDate desc', 'Plan', 'listPlan');
 INSERT INTO `query_statementa` VALUES (33, 1, NULL, 'operation4ThingTypeCircle', b'0', 'count', '[]', 'select count(*) from ThingTypeCircle thingTypeCircle', 'ThingTypeCircle', NULL);
 INSERT INTO `query_statementa` VALUES (34, 1, NULL, 'operation4ThingTypeCircle', b'0', 'list', '[max, offset]', 'from ThingTypeCircle thingTypeCircle order by thingType', 'ThingTypeCircle', 'listThingTypeCircle');
-INSERT INTO `query_statementa` VALUES (44, 0, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[max, myself, offset, thingTypeList]', NULL, '我领导的', NULL);
+INSERT INTO `query_statementa` VALUES (44, 1, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[max, myself, offset, thingTypeList]', 'from Team team where team.thing.thingType in :thingTypeList and team.leader=:myself', '我领导的', 'listTeamAsLeader');
 INSERT INTO `query_statementa` VALUES (45, 1, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[max, offset, thingTypeList]', 'from Thing thing where thing.thingType in :thingTypeList', '可选题目', 'listThing');
-INSERT INTO `query_statementa` VALUES (46, 0, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[max, myself, offset, thingTypeList]', NULL, '我参与的', NULL);
-INSERT INTO `query_statementa` VALUES (47, 0, NULL, 'operation4TeamTeacherProject', b'0', 'count', '[myself, thingTypeList]', NULL, '我参与的', NULL);
-INSERT INTO `query_statementa` VALUES (48, 0, NULL, 'operation4TeamTeacherProject', b'0', 'count', '[myself, thingTypeList]', NULL, '我领导的', NULL);
+INSERT INTO `query_statementa` VALUES (46, 1, NULL, 'operation4TeamTeacherProject', b'1', 'list', '[max, myself, offset, thingTypeList]', 'SELECT team_person.team_members_id\r\nFROM team_person\r\nINNER JOIN team ON team_person.team_members_id = team.id \r\nINNER JOIN thing ON team.thing_id = thing.id\r\nINNER JOIN thing_type ON thing.thing_type_id = thing_type.id\r\nWHERE\r\nteam_person.person_id=myself AND\r\nthing.thing_type_id IN (thingTypeList)\r\nlimit %d,%d', '我参与的', 'listTeamRightAsMember');
+INSERT INTO `query_statementa` VALUES (47, 1, NULL, 'operation4TeamTeacherProject', b'1', 'count', '[myself, thingTypeList]', 'SELECT count(*) FROM team_person\r\nINNER JOIN team ON team_person.team_members_id = team.id\r\nINNER JOIN thing ON team.thing_id = thing.id\r\nINNER JOIN thing_type ON thing.thing_type_id = thing_type.id\r\nWHERE\r\nteam_person.person_id=myself  AND\r\nthing.thing_type_id IN (thingTypeList)', '我参与的', NULL);
+INSERT INTO `query_statementa` VALUES (48, 1, NULL, 'operation4TeamTeacherProject', b'0', 'count', '[myself, thingTypeList]', 'select count(*) from Team team where team.leader=:myself and team.thing.thingType in :thingTypeList', '我领导的', NULL);
 INSERT INTO `query_statementa` VALUES (49, 1, NULL, 'operation4TeamTeacherProject', b'0', 'count', '[thingTypeList]', 'select count(*) from Thing thing where thing.thingType in :thingTypeList', '可选题目', NULL);
 INSERT INTO `query_statementa` VALUES (50, 1, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[currentThing, max, offset, thingTypeList]', 'from Team team where team.thing=:currentThing and team.thing.thingType in :thingTypeList', '相关团队', 'listTeamLeft');
 INSERT INTO `query_statementa` VALUES (51, 1, NULL, 'operation4TeamTeacherProject', b'0', 'count', '[currentThing, thingTypeList]', 'select count(*) from Team team where team.thing=:currentThing and team.thing.thingType in :thingTypeList', '相关团队', NULL);

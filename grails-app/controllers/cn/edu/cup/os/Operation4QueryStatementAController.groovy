@@ -8,7 +8,7 @@ class Operation4QueryStatementAController extends QueryStatementAController {
 
     def backup2file() {
         def now = new Date()
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddhhmm")
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmm")
         def fileName = ">f:/LiXiaopingData/归档/02开发/实验室管理-基础数据/debug/query_statementa${df.format(now)}.sql"
         def myCommandString = ["cmd",
                                "/C",
@@ -29,7 +29,7 @@ class Operation4QueryStatementAController extends QueryStatementAController {
 
     def exportToJsonFileName() {
         def now = new Date()
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh-mm")
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm")
         def fileName = "${params.fileName} ${df.format(now)}.json"
         commonService.exportObjectsToJsonFileName(queryStatementAService.list(), fileName)
         redirect(action: "index")

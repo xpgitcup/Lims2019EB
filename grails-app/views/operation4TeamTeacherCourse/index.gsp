@@ -54,34 +54,18 @@
     <div class="row-cup">
         <div class="col-6">
             <div class="easyui-panel" title="可选：${currentTask}">
-                <div class="easyui-tabs" id="listTeamTeacherProjectDiv">
-                    <div title="可选题目" data-options="closeable:false">
-                        <div id="list可选题目Div"></div>
-                        <div id="paginationTeamTeacherProject可选题目Div" class="easyui-pagination"></div>
-                    </div>
-                    <div title="相关团队" data-options="closeable:false">
-                        <div id="list相关团队Div"></div>
-                        <div id="paginationTeamTeacherProject相关团队Div" class="easyui-pagination"></div>
-                    </div>
-                    <div title="队员列表" data-options="closeable:false">
-                        <div id="list队员列表Div"></div>
-                        <div id="paginationTeamTeacherProject队员列表Div" class="easyui-pagination"></div>
-                    </div>
+                <div class="easyui-panel">
+                    <div title="我的课程" id="listTeamTeacherCourseDiv" class="easyui-panel"></div>
+                    <div id="paginationTeamTeacherCourseDiv" class="easyui-pagination"></div>
                 </div>
             </div>
         </div>
 
         <div class="col-6">
             <div class="easyui-panel" title="已选：${currentTask}">
-                <div class="easyui-tabs" id="listTeamTeacherProjectSelectedDiv">
-                    <div title="我领导的" data-options="closeable:false">
-                        <div id="list我领导的Div"></div>
-                        <div id="paginationTeamTeacherProjectSelected我领导的Div" class="easyui-pagination"></div>
-                    </div>
-                    <div title="我参与的" data-options="closeable:false">
-                        <div id="list我参与的Div"></div>
-                        <div id="paginationTeamTeacherProjectSelected我参与的Div" class="easyui-pagination"></div>
-                    </div>
+                <div class="easyui-panel">
+                    <div title="学生情况" id="listTeamTeacherCourseSelectedDiv" class="easyui-panel"></div>
+                    <div id="paginationTeamTeacherCourseSelectedDiv" class="easyui-pagination"></div>
                 </div>
             </div>
         </div>
