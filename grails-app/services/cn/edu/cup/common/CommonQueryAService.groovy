@@ -19,9 +19,10 @@ class CommonQueryAService {
         def (QueryStatementA queryStatement, leftParams) = findOrCreateQueryString(params)
         // 开始执行查询
         def result = [:]
-        def objectList
+        def objectList = []
         // 设置缺省参数
         result.view = "default"
+        result.objectList = objectList
         if (queryStatement) {
             if (queryStatement.queryString) {
                 // 处理视图

@@ -1,5 +1,6 @@
 package cn.edu.cup.operation
 
+import cn.edu.cup.lims.Team
 import cn.edu.cup.lims.Thing
 import cn.edu.cup.lims.ThingTypeCircle
 
@@ -39,9 +40,37 @@ class Operation4TeamTeacherProjectController extends Operation4TeamController {
                 params.thingTypeList = thingTypeList
                 break
             case "队员列表":
+                def currentTeam = Team.get(params.currentTeam)
+                params.currentTeam = currentTeam
                 break
         }
     }
 
-    def index() {}
+    protected def processResult(result, params) {
+        //println("结果后处理：${params}")
+        switch (params.key) {
+            case "队员列表":
+                def currentTeam = params.currentTeam
+                if (currentTeam) {
+                    result.objectList = [currentTeam]
+                    result.view = "listMember"
+                }
+                break
+            case "我参与的":
+                def teams = []
+                println("结果：${result}")
+                result.objectList.each { e ->
+                    println("查找 ${e}")
+                    teams.add(Team.get(e.team_members_id))
+                }
+                println("转换后：${teams}")
+                result.objectList = teams
+                break
+        }
+        return result
+    }
+
+    def index() {
+        model:[currentTask: "科研任务"]
+    }
 }

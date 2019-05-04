@@ -148,6 +148,10 @@ function setupAppendParamsTeamTeacherProject(title) {
             var currentThing = readStorage("currentThing", 0)
             append = "&currentThing=" + currentThing
             break
+        case "队员列表":
+            var currentTeam = readStorage("currentTeam", 0)
+            append = "&currentTeam=" + currentTeam
+            break
     }
     return append;
 }
@@ -196,4 +200,38 @@ function listTeam(id) {
     //selectCurrentItem(id)
     sessionStorage.setItem("currentThing", id);
     listTeamTeacherProjectDiv.tabs("select", "相关团队");
+}
+
+function createTeam(id) {
+    console.info("创建团队...");
+    sessionStorage.setItem("currentThing", id);
+    ajaxExecute("operation4TeamTeacherProject/createTeam/" + id)
+    listTeamTeacherProjectDiv.tabs("select", "相关团队");
+    location.reload();
+}
+
+function quitTeam(id) {
+    ajaxExecute("operation4TeamTeacherProject/quitTeam/" + id);
+    listTeamTeacherProjectDiv.tabs("select", "相关团队");
+    location.reload();
+}
+
+/*
+* 解散团队
+* */
+function disband(id) {
+    ajaxExecute("operation4TeamTeacherProject/disband/" + id)
+    location.reload();
+}
+
+function joinTeam(id) {
+    ajaxExecute("operation4TeamTeacherProject/joinTeam/" + id)
+    sessionStorage.setItem("currentTeam", id);
+    listTeamTeacherProjectDiv.tabs("select", "队员列表");
+    listTeamTeacherProjectSelectedDiv.tabs("select", "我参与的")
+}
+
+function listMembers(id) {
+    sessionStorage.setItem("currentTeam", id);
+    listTeamTeacherProjectDiv.tabs("select", "队员列表");
 }

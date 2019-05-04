@@ -11,7 +11,7 @@
  Target Server Version : 50725
  File Encoding         : 65001
 
- Date: 04/05/2019 11:45:58
+ Date: 04/05/2019 15:30:33
 */
 
 SET NAMES utf8mb4;
@@ -33,7 +33,7 @@ CREATE TABLE `query_statementa`  (
   `key_string` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `view_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of query_statementa
@@ -72,8 +72,6 @@ INSERT INTO `query_statementa` VALUES (31, 1, NULL, 'operation4Plan', b'0', 'cou
 INSERT INTO `query_statementa` VALUES (32, 1, NULL, 'operation4Plan', b'0', 'list', '[max, offset, thingType]', 'from Plan plan  \r\nwhere plan.thingType.id=cast(:thingType as integer) and plan.upPlan is null \r\norder by updateDate desc', 'Plan', 'listPlan');
 INSERT INTO `query_statementa` VALUES (33, 1, NULL, 'operation4ThingTypeCircle', b'0', 'count', '[]', 'select count(*) from ThingTypeCircle thingTypeCircle', 'ThingTypeCircle', NULL);
 INSERT INTO `query_statementa` VALUES (34, 1, NULL, 'operation4ThingTypeCircle', b'0', 'list', '[max, offset]', 'from ThingTypeCircle thingTypeCircle order by thingType', 'ThingTypeCircle', 'listThingTypeCircle');
-INSERT INTO `query_statementa` VALUES (39, 0, NULL, 'operation4TeamTeacherProject', b'0', 'count', '[]', NULL, '队员列表', NULL);
-INSERT INTO `query_statementa` VALUES (40, 0, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[max, offset]', NULL, '队员列表', NULL);
 INSERT INTO `query_statementa` VALUES (44, 0, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[max, myself, offset, thingTypeList]', NULL, '我领导的', NULL);
 INSERT INTO `query_statementa` VALUES (45, 1, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[max, offset, thingTypeList]', 'from Thing thing where thing.thingType in :thingTypeList', '可选题目', 'listThing');
 INSERT INTO `query_statementa` VALUES (46, 0, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[max, myself, offset, thingTypeList]', NULL, '我参与的', NULL);
@@ -82,5 +80,7 @@ INSERT INTO `query_statementa` VALUES (48, 0, NULL, 'operation4TeamTeacherProjec
 INSERT INTO `query_statementa` VALUES (49, 1, NULL, 'operation4TeamTeacherProject', b'0', 'count', '[thingTypeList]', 'select count(*) from Thing thing where thing.thingType in :thingTypeList', '可选题目', NULL);
 INSERT INTO `query_statementa` VALUES (50, 1, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[currentThing, max, offset, thingTypeList]', 'from Team team where team.thing=:currentThing and team.thing.thingType in :thingTypeList', '相关团队', 'listTeamLeft');
 INSERT INTO `query_statementa` VALUES (51, 1, NULL, 'operation4TeamTeacherProject', b'0', 'count', '[currentThing, thingTypeList]', 'select count(*) from Team team where team.thing=:currentThing and team.thing.thingType in :thingTypeList', '相关团队', NULL);
+INSERT INTO `query_statementa` VALUES (52, 0, NULL, 'operation4TeamTeacherProject', b'0', 'list', '[currentTeam, max, offset]', NULL, '队员列表', NULL);
+INSERT INTO `query_statementa` VALUES (53, 0, NULL, 'operation4TeamTeacherProject', b'0', 'count', '[currentTeam]', NULL, '队员列表', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
