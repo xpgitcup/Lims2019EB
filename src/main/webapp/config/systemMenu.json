@@ -94,20 +94,20 @@
     ]
   },
   {
-    "menuContext": "用户服务",
+    "menuContext": "教师服务",
     "menuAction": "#",
-    "menuDescription": "从团队开始，用户在此完成全部操作",
+    "menuDescription": "教师可见，从团队开始，用户在此完成全部操作",
     "menuOrder": 0,
     "menuItems": [
       {
         "menuContext": "科研任务",
-        "menuAction": "Operation4Team/index?currentTask=科研任务",
+        "menuAction": "Operation4TeamTeacherProject/index",
         "menuDescription": "各种项目的基础数据",
         "menuOrder": 0
       },
       {
         "menuContext": "教学任务",
-        "menuAction": "Operation4Team/index?currentTask=教学任务",
+        "menuAction": "Operation4TeamTeacherCourse/index",
         "menuDescription": "各种项目的基础数据",
         "menuOrder": 0
       },
@@ -115,6 +115,26 @@
         "menuContext": "初始化团队计划",
         "menuAction": "Operation4ProjectPlan/checkAndInitProjectPlan",
         "menuDescription": "初始化格格团队的计划信息",
+        "menuOrder": 0
+      }
+    ]
+  },
+  {
+    "menuContext": "学生服务",
+    "menuAction": "#",
+    "menuDescription": "从团队开始，用户在此完成全部操作",
+    "menuOrder": 0,
+    "menuItems": [
+      {
+        "menuContext": "科研任务",
+        "menuAction": "Operation4TeamStudentProject/index",
+        "menuDescription": "各种项目的基础数据",
+        "menuOrder": 0
+      },
+      {
+        "menuContext": "教学任务",
+        "menuAction": "Operation4TeamStudentCourse/index",
+        "menuDescription": "各种项目的基础数据",
         "menuOrder": 0
       }
     ]

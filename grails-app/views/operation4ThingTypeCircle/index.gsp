@@ -61,7 +61,7 @@
         <div class="row-cup">
             <div class="col-md-6">
                 <div class="easyui-panel">
-                    <h1>任务类型</h1>
+                    <h3>任务类型</h3>
                     <hr>
                     <ul id="treeViewThingTypeUl" class="easyui-tree"></ul>
                 </div>
@@ -69,7 +69,7 @@
 
             <div class="col-md-6">
                 <div class="easyui-panel">
-                    <h1>人员类型</h1>
+                    <h3>人员类型</h3>
                     <hr>
                     <ul id="treeViewPersonTitleUl" class="easyui-tree"></ul>
                 </div>
